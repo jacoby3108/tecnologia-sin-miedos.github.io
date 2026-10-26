@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tecnología sin Miedos v1.0.3.0 - Portal de Archivos</title>
+  <title>Tecnología sin Miedos v1.0.5 - Portal de Archivos</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -567,4 +567,41 @@
             window.closeUploadModal();
           }, 800);
         } catch (err) {
-          status.classList.remove('text
+          status.classList.remove('text-brand-600');
+          status.classList.add('text-red-600');
+          status.textContent = `Error al subir: ${err.message}`;
+        }
+      }
+    }
+
+    window.openLoginModal = () => document.getElementById('login-modal').classList.remove('hidden');
+    window.closeLoginModal = () => document.getElementById('login-modal').classList.add('hidden');
+
+    window.openFolderModal = () => {
+      const errorDiv = document.getElementById('folder-error');
+      if (errorDiv) errorDiv.classList.add('hidden');
+      
+      const currentParent = window.appState.currentFolderId;
+      const label = document.getElementById('folder-context-label');
+      if (label) {
+        if (currentParent === 'root') {
+          label.textContent = 'Se creará en la raíz principal (Inicio).';
+        } else {
+          const parentFolder = window.appState.folders.find(f => f.id === currentParent);
+          label.textContent = `Se creará dentro de la carpeta "${parentFolder ? parentFolder.name : ''}".`;
+        }
+      }
+      document.getElementById('folder-modal').classList.remove('hidden');
+    };
+
+    window.closeFolderModal = () => document.getElementById('folder-modal').classList.add('hidden');
+
+    window.openUploadModal = () => {
+      const status = document.getElementById('upload-status');
+      if (status) status.classList.add('hidden');
+      document.getElementById('upload-modal').classList.remove('hidden');
+    };
+    window.closeUploadModal = () => document.getElementById('upload-modal').classList.add('hidden');
+  </script>
+</body>
+</html>
