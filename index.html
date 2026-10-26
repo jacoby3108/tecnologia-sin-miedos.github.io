@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tecnología sin Miedos v1.0.6 - Portal de Archivos</title>
+  <title>Tecnología sin Miedos v1.0.7 - Portal de Archivos</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -38,7 +38,7 @@
         <div>
           <div class="flex items-center gap-2">
             <h1 class="text-lg font-bold text-slate-900 leading-none">Tecnología sin Miedos</h1>
-            <span class="text-[10px] font-semibold bg-brand-100 text-brand-700 px-1.5 py-0.5 rounded-md">v1.0.6</span>
+            <span class="text-[10px] font-semibold bg-brand-100 text-brand-700 px-1.5 py-0.5 rounded-md">v1.0.7</span>
           </div>
           <p class="text-xs text-slate-500 mt-0.5">Materiales de Estudio y Documentos</p>
         </div>
@@ -66,25 +66,25 @@
   <!-- CONTENIDO PRINCIPAL -->
   <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row gap-6">
 
-    <!-- PANEL IZQUIERDO: CARPETAS PRINCIPALES -->
+    <!-- PANEL IZQUIERDO: CARPETAS PRINCIPALES (Optimizado para Android) -->
     <aside class="w-full md:w-64 flex-shrink-0 space-y-4">
-      <div id="teacher-actions" class="hidden space-y-2">
-        <button onclick="openFolderModal()" class="w-full flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow-sm transition-all">
-          <i class="fa-solid fa-folder-plus"></i>
+      <div id="teacher-actions" class="hidden grid grid-cols-2 md:grid-cols-1 gap-2">
+        <button onclick="openFolderModal()" class="flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white py-3 px-4 rounded-xl text-sm font-semibold shadow-sm transition-all active:scale-95">
+          <i class="fa-solid fa-folder-plus text-base"></i>
           <span>Nueva Carpeta</span>
         </button>
-        <button onclick="openUploadModal()" class="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow-sm transition-all">
-          <i class="fa-solid fa-cloud-arrow-up"></i>
+        <button onclick="openUploadModal()" class="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-4 rounded-xl text-sm font-semibold shadow-sm transition-all active:scale-95">
+          <i class="fa-solid fa-cloud-arrow-up text-base"></i>
           <span>Subir Archivo</span>
         </button>
       </div>
 
       <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-2 flex justify-between items-center">
+        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1 flex justify-between items-center">
           <span>Carpetas Principales</span>
-          <i class="fa-solid fa-arrows-rotate text-slate-400 hover:text-slate-600 cursor-pointer" onclick="renderFolders()" title="Actualizar"></i>
+          <i class="fa-solid fa-arrows-rotate text-slate-400 hover:text-slate-600 p-1 cursor-pointer active:rotate-180 transition-transform" onclick="renderFolders()" title="Actualizar"></i>
         </h2>
-        <nav id="folder-list" class="space-y-1">
+        <nav id="folder-list" class="space-y-1.5 max-h-60 md:max-h-none overflow-y-auto pr-1">
           <!-- Carga dinámicamente -->
         </nav>
       </div>
@@ -92,9 +92,9 @@
 
     <!-- PANEL DERECHO: CONTENIDO Y NAVEGACIÓN -->
     <main class="flex-1 bg-white border border-slate-200 rounded-2xl shadow-sm p-6 flex flex-col">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
-        <!-- Breadcrumb / Migas de Pan -->
-        <div class="flex items-center gap-2 text-slate-700 font-semibold text-sm flex-wrap" id="breadcrumb">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 w-full">
+        <!-- Breadcrumb / Migas de Pan (Deslizable en móviles) -->
+        <div class="flex items-center gap-2 text-slate-700 font-semibold text-sm overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 whitespace-nowrap" id="breadcrumb">
           <!-- Carga dinámicamente -->
         </div>
 
@@ -134,7 +134,7 @@
   <!-- FOOTER -->
   <footer class="bg-white border-t border-slate-200 mt-auto py-4">
     <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400 flex justify-between items-center">
-      <span>UNI3 Maldonado &copy; 2026 - Tecnología sin Miedos <span class="ml-1 text-slate-300">v1.0.3</span></span>
+      <span>UNI3 Maldonado &copy; 2026 - Tecnología sin Miedos <span class="ml-1 text-slate-300">v1.0.7</span></span>
       <span id="connection-status" class="flex items-center gap-1.5 text-slate-400">
         <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> Firebase Conectado
       </span>
@@ -334,9 +334,9 @@
       if (!nav) return;
 
       let html = `
-        <button onclick="selectFolder('root')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium transition-all ${window.appState.currentFolderId === 'root' ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}">
-          <span class="flex items-center gap-2.5">
-            <i class="fa-solid fa-house text-brand-600"></i> Inicio
+        <button onclick="selectFolder('root')" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all active:scale-[0.98] ${window.appState.currentFolderId === 'root' ? 'bg-brand-50 text-brand-700 font-semibold border border-brand-200/60' : 'text-slate-600 hover:bg-slate-50 border border-transparent'}">
+          <span class="flex items-center gap-3">
+            <i class="fa-solid fa-house text-brand-600 text-base"></i> Inicio
           </span>
         </button>
       `;
@@ -346,12 +346,12 @@
       rootFolders.forEach(f => {
         const isSelected = window.appState.currentFolderId === f.id;
         html += `
-          <div class="group flex items-center justify-between rounded-xl ${isSelected ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}">
-            <button onclick="selectFolder('${f.id}')" class="flex-1 flex items-center gap-2.5 px-3 py-2 text-sm text-left truncate">
-              <i class="fa-solid fa-folder text-brand-500"></i>
+          <div class="group flex items-center justify-between rounded-xl transition-all ${isSelected ? 'bg-brand-50 text-brand-700 font-semibold border border-brand-200/60' : 'text-slate-600 hover:bg-slate-50 border border-transparent'}">
+            <button onclick="selectFolder('${f.id}')" class="flex-1 flex items-center gap-3 px-3.5 py-2.5 text-sm text-left truncate active:scale-[0.98]">
+              <i class="fa-solid fa-folder text-brand-500 text-base"></i>
               <span class="truncate">${f.name}</span>
             </button>
-            ${window.appState.user ? `<button onclick="deleteFolder('${f.id}')" class="opacity-0 group-hover:opacity-100 px-2 py-1 text-slate-400 hover:text-red-500 transition-all" title="Eliminar"><i class="fa-solid fa-trash-can text-xs"></i></button>` : ''}
+            ${window.appState.user ? `<button onclick="deleteFolder('${f.id}')" class="p-2 text-slate-400 hover:text-red-500 transition-all" title="Eliminar"><i class="fa-solid fa-trash-can text-xs"></i></button>` : ''}
           </div>
         `;
       });
@@ -544,18 +544,13 @@
           const fileId = 'file-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4);
           const storagePath = `uploads/${window.appState.currentFolderId}/${fileId}_${file.name}`;
           const storageRef = ref(storage, storagePath);
-          
-          // Código anterior (desactivado temporalmente):
-          // const snapshot = await uploadBytes(storageRef, file);
 
-          // Código nuevo con el nombre de archivo corregido:
+          // Disposición para forzar descarga con el nombre del archivo
           const metadata = {
-          contentDisposition: `attachment; filename="${file.name}"`
+            contentDisposition: `attachment; filename="${file.name}"`
           };
-          const snapshot = await uploadBytes(storageRef, file, metadata);
-          // Fin codigo nuevo
 
-          
+          const snapshot = await uploadBytes(storageRef, file, metadata);
           const downloadUrl = await getDownloadURL(snapshot.ref);
 
           const fileObj = {
