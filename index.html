@@ -544,8 +544,18 @@
           const fileId = 'file-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4);
           const storagePath = `uploads/${window.appState.currentFolderId}/${fileId}_${file.name}`;
           const storageRef = ref(storage, storagePath);
+          
+          // Código anterior (desactivado temporalmente):
+          // const snapshot = await uploadBytes(storageRef, file);
 
-          const snapshot = await uploadBytes(storageRef, file);
+          // Código nuevo con el nombre de archivo corregido:
+          const metadata = {
+          contentDisposition: `attachment; filename="${file.name}"`
+          };
+          const snapshot = await uploadBytes(storageRef, file, metadata);
+          // Fin codigo nuevo
+
+          
           const downloadUrl = await getDownloadURL(snapshot.ref);
 
           const fileObj = {
