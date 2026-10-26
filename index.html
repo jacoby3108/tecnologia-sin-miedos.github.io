@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-full bg-slate-50">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tecnología sin Miedos - Portal de Archivos</title>
+  
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -17,121 +18,148 @@
               500: '#0ea5e9',
               600: '#0284c7',
               700: '#0369a1',
+              800: '#0c4a6e',
             }
           }
         }
       }
     }
   </script>
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-slate-50 font-sans antialiased text-slate-800 min-h-screen flex flex-col">
 
-  <!-- HEADER / NAVBAR -->
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="h-full flex flex-col text-slate-800 bg-slate-50">
+
+  <!-- TOP NAVBAR -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center font-bold text-xl shadow-md">
           <i class="fa-solid fa-graduation-cap"></i>
         </div>
         <div>
-          <h1 class="text-lg font-bold text-slate-900 leading-none">Tecnología sin Miedos</h1>
-          <p class="text-xs text-slate-500 mt-0.5">Materiales de Estudio y Documentos</p>
+          <h1 class="text-lg font-bold text-slate-900 leading-tight">Tecnología sin Miedos</h1>
+          <p class="text-xs text-slate-500">Materiales de Estudio y Documentos</p>
         </div>
       </div>
 
+      <!-- Auth Controls & Role Badge -->
       <div class="flex items-center gap-3">
-        <!-- Status Badge -->
-        <div id="user-badge" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-xs font-medium text-slate-600">
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <div id="user-badge" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-xs font-semibold text-slate-600 border border-slate-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           <span id="user-status-text">Modo Estudiante</span>
         </div>
 
-        <!-- Auth Buttons -->
-        <button id="btn-login" onclick="openLoginModal()" class="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm">
+        <button id="btn-login" onclick="openLoginModal()" class="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm active:scale-95">
           <i class="fa-solid fa-right-to-bracket"></i>
           <span>Acceso Docentes</span>
         </button>
 
-        <button id="btn-logout" onclick="logout()" class="hidden flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition-all">
+        <button id="btn-logout" onclick="logout()" class="hidden flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition-all active:scale-95">
           <i class="fa-solid fa-right-from-bracket"></i>
           <span>Cerrar Sesión</span>
         </button>
       </div>
+
     </div>
   </header>
 
-  <!-- CONTENIDO PRINCIPAL -->
+  <!-- MAIN APP CONTENT -->
   <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row gap-6">
 
-    <!-- PANEL IZQUIERDO: CARPETAS Y HERRAMIENTAS -->
+    <!-- LEFT SIDEBAR: FOLDERS & TEACHER ACTIONS -->
     <aside class="w-full md:w-64 flex-shrink-0 space-y-4">
       
-      <!-- Botones de Acción de Docente -->
+      <!-- Teacher Action Buttons -->
       <div id="teacher-actions" class="hidden space-y-2">
-        <button onclick="openFolderModal()" class="w-full flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow-sm transition-all">
+        <button type="button" onclick="openFolderModal()" class="w-full flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow-sm transition-all active:scale-95">
           <i class="fa-solid fa-folder-plus"></i>
           <span>Nueva Carpeta</span>
         </button>
-        <button onclick="openUploadModal()" class="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow-sm transition-all">
+        <button type="button" onclick="openUploadModal()" class="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow-sm transition-all active:scale-95">
           <i class="fa-solid fa-cloud-arrow-up"></i>
           <span>Subir Archivo</span>
         </button>
       </div>
 
-      <!-- Árbol / Lista de Carpetas -->
+      <!-- Navigation Folder List -->
       <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-2 flex justify-between items-center">
-          <span>Carpetas</span>
-          <i class="fa-solid fa-arrows-rotate text-slate-400 hover:text-slate-600 cursor-pointer" onclick="renderFolders()" title="Actualizar"></i>
-        </h2>
-        <nav id="folder-list" class="space-y-1">
-          <!-- Carga dinámicamente -->
+        <div class="flex justify-between items-center mb-3 px-2">
+          <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Carpetas</h2>
+          <button onclick="renderApp()" class="text-slate-400 hover:text-brand-600 text-xs p-1" title="Actualizar">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
+        </div>
+        
+        <nav id="folder-list" class="space-y-1 custom-scrollbar max-h-96 overflow-y-auto">
+          <!-- Rendered dynamically -->
         </nav>
+      </div>
+
+      <!-- Connection Indicator -->
+      <div class="flex items-center justify-between px-3.5 py-2.5 bg-white rounded-xl border border-slate-200 text-xs text-slate-500 shadow-sm">
+        <span class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          Firebase Conectado
+        </span>
+        <i class="fa-solid fa-shield-halved text-emerald-600"></i>
       </div>
     </aside>
 
-    <!-- PANEL DERECHO: CONTENIDO DE LA CARPETA SELECCIONADA -->
-    <main class="flex-1 bg-white border border-slate-200 rounded-2xl shadow-sm p-6 flex flex-col">
+    <!-- RIGHT MAIN PANEL: FILE EXPLORER VIEW -->
+    <main class="flex-1 bg-white border border-slate-200 rounded-2xl shadow-sm p-6 flex flex-col min-h-[450px]">
       
-      <!-- Barra Superior: Navegación y Búsqueda -->
+      <!-- Top Explorer Bar -->
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
-        <div class="flex items-center gap-2 text-slate-700 font-semibold" id="breadcrumb">
+        <div class="flex items-center gap-2 text-slate-800 font-bold text-base" id="breadcrumb">
           <i class="fa-solid fa-folder-open text-brand-600"></i>
           <span id="current-folder-title">Inicio</span>
         </div>
 
         <div class="relative w-full sm:w-64">
-          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-          <input type="text" id="search-input" oninput="filterFiles()" placeholder="Buscar archivos..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500 transition-all">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input type="text" id="search-input" oninput="filterFiles()" placeholder="Buscar archivos..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all">
         </div>
       </div>
 
-      <!-- Lista de Archivos -->
+      <!-- Files Table -->
       <div class="flex-1 mt-4 overflow-x-auto">
         <table class="w-full text-left text-sm text-slate-600">
-          <thead class="bg-slate-50 text-xs font-bold text-slate-400 uppercase tracking-wider">
+          <thead class="bg-slate-50 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
             <tr>
               <th class="py-3 px-4 rounded-l-lg">Nombre</th>
-              <th class="py-3 px-4">Subido Por</th>
-              <th class="py-3 px-4">Fecha</th>
-              <th class="py-3 px-4">Tamaño</th>
+              <th class="py-3 px-4 hidden md:table-cell">Subido Por</th>
+              <th class="py-3 px-4 hidden sm:table-cell">Fecha</th>
+              <th class="py-3 px-4 hidden sm:table-cell">Tamaño</th>
               <th class="py-3 px-4 text-right rounded-r-lg">Acciones</th>
             </tr>
           </thead>
           <tbody id="files-table-body" class="divide-y divide-slate-100">
-            <!-- Archivos insertados mediante JS -->
+            <!-- Files inserted dynamically -->
           </tbody>
         </table>
 
-        <!-- Estado Vacío -->
+        <!-- Empty State Container -->
         <div id="empty-state" class="hidden py-16 text-center">
-          <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400 text-2xl">
+          <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-3 text-slate-400 text-2xl">
             <i class="fa-solid fa-folder-open"></i>
           </div>
-          <h3 class="text-slate-700 font-bold mb-1">Esta carpeta está vacía</h3>
-          <p class="text-xs text-slate-400">No hay elementos guardados en esta ubicación.</p>
+          <h3 class="text-slate-700 font-semibold text-base mb-1">Esta carpeta está vacía</h3>
+          <p class="text-xs text-slate-400">No hay archivos ni documentos guardados en esta ubicación.</p>
         </div>
       </div>
     </main>
@@ -139,11 +167,9 @@
 
   <!-- FOOTER -->
   <footer class="bg-white border-t border-slate-200 mt-auto py-4">
-    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400 flex justify-between items-center">
-      <span>UNI3 Maldonado &copy; 2026 - Tecnología sin Miedos</span>
-      <span id="connection-status" class="flex items-center gap-1.5 text-slate-400">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> Firebase Conectado
-      </span>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-2">
+      <span>Tecnología sin Miedos &copy; 2026 - Portal Educativo</span>
+      <span class="text-slate-400">UNI3 Maldonado</span>
     </div>
   </footer>
 
@@ -157,20 +183,20 @@
           <i class="fa-solid fa-user-shield"></i>
         </div>
         <h2 class="text-lg font-bold text-slate-800">Acceso para Docentes</h2>
-        <p class="text-xs text-slate-500 mt-1">Ingresa tus credenciales para administrar archivos.</p>
+        <p class="text-xs text-slate-500 mt-1">Ingresa tus credenciales para administrar archivos y carpetas.</p>
       </div>
 
       <form onsubmit="handleLogin(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Correo Electrónico</label>
-          <input type="email" id="login-email" required placeholder="tu-correo@gmail.com" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500">
+          <input type="email" id="login-email" value="itba.jacoby@gmail.com" required placeholder="tu-correo@gmail.com" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Contraseña</label>
-          <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500">
+          <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500">
         </div>
 
-        <div id="login-error" class="hidden p-3 bg-red-50 text-red-600 rounded-xl text-xs font-medium"></div>
+        <div id="login-error" class="hidden p-3 bg-red-50 text-red-600 rounded-xl text-xs font-medium border border-red-100"></div>
 
         <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 rounded-xl text-sm transition-all shadow-sm">
           Iniciar Sesión
@@ -188,22 +214,24 @@
       <form onsubmit="handleCreateFolder(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre de la Carpeta</label>
-          <input type="text" id="folder-name-input" required placeholder="Ej: Clase 1 - Introducción" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500">
+          <input type="text" id="folder-name-input" required placeholder="Ej: Módulo 1 - Teléfonos" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500">
         </div>
+        <div id="folder-error" class="hidden p-2.5 bg-red-50 text-red-600 rounded-xl text-xs font-medium"></div>
         <div class="flex justify-end gap-2">
-          <button type="button" onclick="closeFolderModal()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg">Cancelar</button>
-          <button type="submit" class="px-4 py-2 text-sm font-semibold bg-brand-600 text-white hover:bg-brand-700 rounded-lg shadow-sm">Crear</button>
+          <button type="button" onclick="closeFolderModal()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl">Cancelar</button>
+          <button type="submit" class="px-4 py-2 text-sm font-semibold bg-brand-600 text-white hover:bg-brand-700 rounded-xl shadow-sm">Crear</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- MODAL: SUBIR ARCHIVOS -->
+  <!-- MODAL: SUBIR ARCHIVOS (DRAG AND DROP) -->
   <div id="upload-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 relative">
       <button onclick="closeUploadModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up text-brand-600"></i> Subir Archivos</h2>
       
+      <!-- Drag and drop zone -->
       <div id="drop-zone" 
            ondragover="handleDragOver(event)" 
            ondragleave="handleDragLeave(event)" 
@@ -212,38 +240,40 @@
            class="border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-xl p-8 text-center cursor-pointer transition-all bg-slate-50 mb-4">
         <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 mb-2"></i>
         <p class="text-sm font-semibold text-slate-700">Arrastra archivos aquí o haz clic para examinar</p>
-        <p class="text-xs text-slate-400 mt-1">Soporta PDFs, imágenes, documentos de texto y presentaciones.</p>
+        <p class="text-xs text-slate-400 mt-1">PDFs, guías de clase, imágenes o documentos</p>
         <input type="file" id="file-input" class="hidden" multiple onchange="handleFileSelect(event)">
       </div>
       
-      <div id="upload-status" class="text-xs text-brand-600 font-medium text-center hidden">Procesando y guardando archivo...</div>
+      <div id="upload-status" class="text-xs text-brand-600 font-medium text-center hidden mb-2">Procesando y guardando archivo(s)...</div>
       
-      <div class="flex justify-end gap-2 mt-4">
-        <button onclick="closeUploadModal()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg">Cerrar</button>
+      <div class="flex justify-end gap-2">
+        <button onclick="closeUploadModal()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl">Cerrar</button>
       </div>
     </div>
   </div>
 
-  <!-- FIREBASE MODULES -->
+  <!-- FIREBASE APPLICATION MODULE -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyAn1ziwrWlSp9YZuaif78FdzJeYGY4Prc0",
       authDomain: "tecnologia-sin-miedos.firebaseapp.com",
       projectId: "tecnologia-sin-miedos",
       storageBucket: "tecnologia-sin-miedos.firebasestorage.app",
       messagingSenderId: "83121002854",
-      appId: "1:83121002854:web:7f35234d291d22dbdad0a7",
-      measurementId: "G-14K4HJMN2C"
+      appId: "1:83121002854:web:7f35234d291d22dbdad0a7"
     };
 
+    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Global State
     window.appState = {
       user: null,
       currentFolderId: 'root',
@@ -251,6 +281,13 @@
       files: []
     };
 
+    // Firestore Collections
+    const foldersColRef = collection(db, 'folders');
+    const filesColRef = collection(db, 'files');
+    const fallbackFoldersColRef = collection(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'folders');
+    const fallbackFilesColRef = collection(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'files');
+
+    // Auth Change Subscription
     onAuthStateChanged(auth, (user) => {
       window.appState.user = user;
       const teacherActions = document.getElementById('teacher-actions');
@@ -272,22 +309,33 @@
         userStatusText.textContent = 'Modo Estudiante';
         userBadge.classList.remove('hidden');
       }
-      window.renderFiles();
+      window.renderApp();
     });
 
-    const foldersRef = collection(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'folders');
-    const filesRef = collection(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'files');
-
-    onSnapshot(foldersRef, (snapshot) => {
+    // Real-time Firestore Listeners
+    onSnapshot(foldersColRef, (snapshot) => {
       window.appState.folders = snapshot.docs.map(doc => doc.data());
-      window.renderFolders();
+      window.renderApp();
+    }, () => {
+      // Fallback listener for subcollection path
+      onSnapshot(fallbackFoldersColRef, (s) => {
+        window.appState.folders = s.docs.map(doc => doc.data());
+        window.renderApp();
+      });
     });
 
-    onSnapshot(filesRef, (snapshot) => {
+    onSnapshot(filesColRef, (snapshot) => {
       window.appState.files = snapshot.docs.map(doc => doc.data());
-      window.renderFiles();
+      window.renderApp();
+    }, () => {
+      // Fallback listener for subcollection path
+      onSnapshot(fallbackFilesColRef, (s) => {
+        window.appState.files = s.docs.map(doc => doc.data());
+        window.renderApp();
+      });
     });
 
+    // LOGIN HANDLER
     window.handleLogin = async function(e) {
       e.preventDefault();
       const email = document.getElementById('login-email').value;
@@ -299,7 +347,7 @@
         await signInWithEmailAndPassword(auth, email, password);
         window.closeLoginModal();
       } catch (err) {
-        errorDiv.textContent = `Error de autenticación: ${err.message}`;
+        errorDiv.textContent = 'Error de inicio de sesión: Revisa tus datos.';
         errorDiv.classList.remove('hidden');
       }
     };
@@ -308,9 +356,12 @@
       signOut(auth);
     };
 
+    // FOLDER CREATION HANDLER
     window.handleCreateFolder = async function(e) {
       e.preventDefault();
-      const name = document.getElementById('folder-name-input').value.trim();
+      const input = document.getElementById('folder-name-input');
+      const errDiv = document.getElementById('folder-error');
+      const name = input.value.trim();
       if (!name) return;
 
       const folderId = 'folder-' + Date.now();
@@ -320,22 +371,35 @@
         createdAt: new Date().toISOString()
       };
 
-      await setDoc(doc(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'folders', folderId), newFolder);
-      window.closeFolderModal();
-      document.getElementById('folder-name-input').value = '';
+      try {
+        errDiv.classList.add('hidden');
+        // Save to primary collection
+        await setDoc(doc(db, 'folders', folderId), newFolder);
+        // Mirror write to fallback path for existing security rules
+        await setDoc(doc(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'folders', folderId), newFolder);
+        
+        input.value = '';
+        window.closeFolderModal();
+      } catch (err) {
+        errDiv.textContent = 'Error al crear la carpeta. Inicia sesión nuevamente.';
+        errDiv.classList.remove('hidden');
+      }
     };
 
     window.selectFolder = function(folderId) {
       window.appState.currentFolderId = folderId;
-      window.renderFolders();
-      window.renderFiles();
+      window.renderApp();
     };
 
-    window.renderFolders = function() {
-      const nav = document.getElementById('folder-list');
-      if (!nav) return;
+    // RENDER APPLICATION
+    window.renderApp = function() {
+      const folderNav = document.getElementById('folder-list');
+      const tbody = document.getElementById('files-table-body');
+      const emptyState = document.getElementById('empty-state');
+      const searchVal = (document.getElementById('search-input')?.value || '').toLowerCase();
 
-      let html = `
+      // 1. Render Sidebar Folders
+      let navHtml = `
         <button onclick="selectFolder('root')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium transition-all ${window.appState.currentFolderId === 'root' ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}">
           <span class="flex items-center gap-2.5">
             <i class="fa-solid fa-house text-brand-600"></i> Inicio
@@ -347,7 +411,7 @@
 
       userFolders.forEach(f => {
         const isSelected = window.appState.currentFolderId === f.id;
-        html += `
+        navHtml += `
           <div class="group flex items-center justify-between rounded-xl ${isSelected ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}">
             <button onclick="selectFolder('${f.id}')" class="flex-1 flex items-center gap-2.5 px-3 py-2 text-sm text-left truncate">
               <i class="fa-solid fa-folder text-brand-500"></i>
@@ -358,23 +422,22 @@
         `;
       });
 
-      nav.innerHTML = html;
+      if (folderNav) folderNav.innerHTML = navHtml;
 
+      // Update Current Title
       const currentFolder = window.appState.folders.find(f => f.id === window.appState.currentFolderId);
-      document.getElementById('current-folder-title').textContent = (window.appState.currentFolderId === 'root') ? 'Inicio' : (currentFolder ? currentFolder.name : 'Inicio');
-    };
+      const titleSpan = document.getElementById('current-folder-title');
+      if (titleSpan) {
+        titleSpan.textContent = (window.appState.currentFolderId === 'root') ? 'Inicio' : (currentFolder ? currentFolder.name : 'Inicio');
+      }
 
-    window.renderFiles = function() {
-      const tbody = document.getElementById('files-table-body');
-      const emptyState = document.getElementById('empty-state');
-      if (!tbody || !emptyState) return;
-
-      const searchVal = (document.getElementById('search-input')?.value || '').toLowerCase();
-
+      // 2. Render Current Folder Files
       const currentFiles = window.appState.files.filter(f => 
         f.folderId === window.appState.currentFolderId && 
         f.name.toLowerCase().includes(searchVal)
       );
+
+      if (!tbody || !emptyState) return;
 
       if (currentFiles.length === 0) {
         tbody.innerHTML = '';
@@ -383,23 +446,23 @@
       }
 
       emptyState.classList.add('hidden');
-      let html = '';
+      let tableHtml = '';
 
       currentFiles.forEach(file => {
         const dateFormatted = new Date(file.date).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
-        const sizeKB = (file.size / 1024).toFixed(1) + ' KB';
+        const sizeKB = file.size ? (file.size / 1024).toFixed(1) + ' KB' : 'N/A';
 
-        html += `
+        tableHtml += `
           <tr class="hover:bg-slate-50 transition-colors">
             <td class="py-3 px-4 font-medium text-slate-800 flex items-center gap-3">
               <i class="fa-solid fa-file-pdf text-red-500 text-lg"></i>
               <span class="truncate max-w-xs sm:max-w-md">${file.name}</span>
             </td>
-            <td class="py-3 px-4 text-slate-500">${file.uploader || 'Docente'}</td>
-            <td class="py-3 px-4 text-slate-400 text-xs">${dateFormatted}</td>
-            <td class="py-3 px-4 text-slate-400 text-xs">${sizeKB}</td>
+            <td class="py-3 px-4 hidden md:table-cell text-slate-500 text-xs">${file.uploader || 'Docente'}</td>
+            <td class="py-3 px-4 hidden sm:table-cell text-slate-400 text-xs">${dateFormatted}</td>
+            <td class="py-3 px-4 hidden sm:table-cell text-slate-400 text-xs">${sizeKB}</td>
             <td class="py-3 px-4 text-right space-x-2">
-              <a href="${file.url}" download="${file.name}" class="inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all">
+              <a href="${file.url}" download="${file.name}" class="inline-flex items-center gap-1.5 bg-brand-50 hover:bg-brand-100 text-brand-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">
                 <i class="fa-solid fa-download"></i> Descargar
               </a>
               ${window.appState.user ? `<button onclick="deleteFile('${file.id}')" class="inline-flex items-center gap-1 bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all"><i class="fa-solid fa-trash"></i></button>` : ''}
@@ -408,15 +471,17 @@
         `;
       });
 
-      tbody.innerHTML = html;
+      tbody.innerHTML = tableHtml;
     };
 
     window.filterFiles = function() {
-      window.renderFiles();
+      window.renderApp();
     };
 
     window.deleteFolder = async function(folderId) {
-      if (confirm('¿Deseas eliminar esta carpeta y su contenido?')) {
+      if (!window.appState.user) return;
+      if (confirm('¿Deseas eliminar esta carpeta?')) {
+        await deleteDoc(doc(db, 'folders', folderId));
         await deleteDoc(doc(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'folders', folderId));
         if (window.appState.currentFolderId === folderId) {
           window.appState.currentFolderId = 'root';
@@ -425,11 +490,14 @@
     };
 
     window.deleteFile = async function(fileId) {
+      if (!window.appState.user) return;
       if (confirm('¿Deseas eliminar este archivo?')) {
+        await deleteDoc(doc(db, 'files', fileId));
         await deleteDoc(doc(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'files', fileId));
       }
     };
 
+    // FILE UPLOAD AND DRAG-AND-DROP LOGIC
     window.handleDragOver = function(e) {
       e.preventDefault();
       e.stopPropagation();
@@ -481,7 +549,9 @@
             url: evt.target.result
           };
           
+          await setDoc(doc(db, 'files', fileObj.id), fileObj);
           await setDoc(doc(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'files', fileObj.id), fileObj);
+          
           if (status) status.classList.add('hidden');
           window.closeUploadModal();
         };
@@ -489,10 +559,14 @@
       });
     }
 
+    // EXPOSE MODAL CONTROLS TO GLOBAL WINDOW SCOPE
     window.openLoginModal = () => document.getElementById('login-modal').classList.remove('hidden');
     window.closeLoginModal = () => document.getElementById('login-modal').classList.add('hidden');
 
-    window.openFolderModal = () => document.getElementById('folder-modal').classList.remove('hidden');
+    window.openFolderModal = () => {
+      document.getElementById('folder-error').classList.add('hidden');
+      document.getElementById('folder-modal').classList.remove('hidden');
+    };
     window.closeFolderModal = () => document.getElementById('folder-modal').classList.add('hidden');
 
     window.openUploadModal = () => document.getElementById('upload-modal').classList.remove('hidden');
@@ -500,3 +574,4 @@
   </script>
 </body>
 </html>
+```
