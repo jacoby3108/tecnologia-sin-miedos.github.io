@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tecnología sin Miedos - Portal de Archivos</title>
+  <title>Tecnología sin Miedos v1.0.3 - Portal de Archivos</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -36,19 +36,20 @@
           <i class="fa-solid fa-graduation-cap"></i>
         </div>
         <div>
-          <h1 class="text-lg font-bold text-slate-900 leading-none">Tecnología sin Miedos</h1>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg font-bold text-slate-900 leading-none">Tecnología sin Miedos</h1>
+            <span class="text-[10px] font-semibold bg-brand-100 text-brand-700 px-1.5 py-0.5 rounded-md">v1.0.3</span>
+          </div>
           <p class="text-xs text-slate-500 mt-0.5">Materiales de Estudio y Documentos</p>
         </div>
       </div>
 
       <div class="flex items-center gap-3">
-        <!-- Status Badge -->
         <div id="user-badge" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-xs font-medium text-slate-600">
           <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
           <span id="user-status-text">Modo Estudiante</span>
         </div>
 
-        <!-- Auth Buttons -->
         <button id="btn-login" onclick="openLoginModal()" class="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm">
           <i class="fa-solid fa-right-to-bracket"></i>
           <span>Acceso Docentes</span>
@@ -65,10 +66,8 @@
   <!-- CONTENIDO PRINCIPAL -->
   <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row gap-6">
 
-    <!-- PANEL IZQUIERDO: CARPETAS Y HERRAMIENTAS -->
+    <!-- PANEL IZQUIERDO: CARPETAS PRINCIPALES -->
     <aside class="w-full md:w-64 flex-shrink-0 space-y-4">
-      
-      <!-- Botones de Acción de Docente -->
       <div id="teacher-actions" class="hidden space-y-2">
         <button onclick="openFolderModal()" class="w-full flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow-sm transition-all">
           <i class="fa-solid fa-folder-plus"></i>
@@ -80,10 +79,9 @@
         </button>
       </div>
 
-      <!-- Árbol / Lista de Carpetas -->
       <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
         <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-2 flex justify-between items-center">
-          <span>Carpetas</span>
+          <span>Carpetas Principales</span>
           <i class="fa-solid fa-arrows-rotate text-slate-400 hover:text-slate-600 cursor-pointer" onclick="renderFolders()" title="Actualizar"></i>
         </h2>
         <nav id="folder-list" class="space-y-1">
@@ -92,23 +90,20 @@
       </div>
     </aside>
 
-    <!-- PANEL DERECHO: CONTENIDO DE LA CARPETA SELECCIONADA -->
+    <!-- PANEL DERECHO: CONTENIDO Y NAVEGACIÓN -->
     <main class="flex-1 bg-white border border-slate-200 rounded-2xl shadow-sm p-6 flex flex-col">
-      
-      <!-- Barra Superior: Navegación y Búsqueda -->
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
-        <div class="flex items-center gap-2 text-slate-700 font-semibold" id="breadcrumb">
-          <i class="fa-solid fa-folder-open text-brand-600"></i>
-          <span id="current-folder-title">Inicio</span>
+        <!-- Breadcrumb / Migas de Pan -->
+        <div class="flex items-center gap-2 text-slate-700 font-semibold text-sm flex-wrap" id="breadcrumb">
+          <!-- Carga dinámicamente -->
         </div>
 
         <div class="relative w-full sm:w-64">
           <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-          <input type="text" id="search-input" oninput="filterFiles()" placeholder="Buscar archivos..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500 transition-all">
+          <input type="text" id="search-input" oninput="filterFiles()" placeholder="Buscar en esta carpeta..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500 transition-all">
         </div>
       </div>
 
-      <!-- Lista de Archivos -->
       <div class="flex-1 mt-4 overflow-x-auto">
         <table class="w-full text-left text-sm text-slate-600">
           <thead class="bg-slate-50 text-xs font-bold text-slate-400 uppercase tracking-wider">
@@ -116,22 +111,21 @@
               <th class="py-3 px-4 rounded-l-lg">Nombre</th>
               <th class="py-3 px-4">Subido Por</th>
               <th class="py-3 px-4">Fecha</th>
-              <th class="py-3 px-4">Tamaño</th>
+              <th class="py-3 px-4">Tamaño / Tipo</th>
               <th class="py-3 px-4 text-right rounded-r-lg">Acciones</th>
             </tr>
           </thead>
           <tbody id="files-table-body" class="divide-y divide-slate-100">
-            <!-- Archivos insertados mediante JS -->
+            <!-- Subcarpetas y Archivos -->
           </tbody>
         </table>
 
-        <!-- Estado Vacío -->
         <div id="empty-state" class="hidden py-16 text-center">
           <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400 text-2xl">
             <i class="fa-solid fa-folder-open"></i>
           </div>
           <h3 class="text-slate-700 font-bold mb-1">Esta carpeta está vacía</h3>
-          <p class="text-xs text-slate-400">No hay elementos guardados en esta ubicación.</p>
+          <p class="text-xs text-slate-400">No hay archivos ni subcarpetas guardadas en esta ubicación.</p>
         </div>
       </div>
     </main>
@@ -140,18 +134,17 @@
   <!-- FOOTER -->
   <footer class="bg-white border-t border-slate-200 mt-auto py-4">
     <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400 flex justify-between items-center">
-      <span>UNI3 Maldonado &copy; 2026 - Tecnología sin Miedos</span>
+      <span>UNI3 Maldonado &copy; 2026 - Tecnología sin Miedos <span class="ml-1 text-slate-300">v1.0.3</span></span>
       <span id="connection-status" class="flex items-center gap-1.5 text-slate-400">
         <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> Firebase Conectado
       </span>
     </div>
   </footer>
 
-  <!-- MODAL: LOGIN DOCENTES -->
+  <!-- MODALES -->
   <div id="login-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100 relative">
       <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-      
       <div class="text-center mb-6">
         <div class="w-12 h-12 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mx-auto mb-2 text-xl">
           <i class="fa-solid fa-user-shield"></i>
@@ -159,7 +152,6 @@
         <h2 class="text-lg font-bold text-slate-800">Acceso para Docentes</h2>
         <p class="text-xs text-slate-500 mt-1">Ingresa tus credenciales para administrar archivos.</p>
       </div>
-
       <form onsubmit="handleLogin(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Correo Electrónico</label>
@@ -169,27 +161,23 @@
           <label class="block text-xs font-semibold text-slate-600 mb-1">Contraseña</label>
           <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500">
         </div>
-
         <div id="login-error" class="hidden p-3 bg-red-50 text-red-600 rounded-xl text-xs font-medium"></div>
-
-        <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 rounded-xl text-sm transition-all shadow-sm">
-          Iniciar Sesión
-        </button>
+        <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 rounded-xl text-sm transition-all shadow-sm">Iniciar Sesión</button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL: NUEVA CARPETA -->
   <div id="folder-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-100 relative">
       <button onclick="closeFolderModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-      <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-folder-plus text-brand-600"></i> Crear Nueva Carpeta</h2>
-      
+      <h2 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2"><i class="fa-solid fa-folder-plus text-brand-600"></i> Crear Nueva Carpeta</h2>
+      <p id="folder-context-label" class="text-xs text-slate-500 mb-4"></p>
       <form onsubmit="handleCreateFolder(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre de la Carpeta</label>
-          <input type="text" id="folder-name-input" required placeholder="Ej: Clase 1 - Introducción" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500">
+          <input type="text" id="folder-name-input" required placeholder="Ej: Clase 1 - Ejercicios" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500">
         </div>
+        <div id="folder-error" class="hidden text-xs text-red-600 font-medium"></div>
         <div class="flex justify-end gap-2">
           <button type="button" onclick="closeFolderModal()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg">Cancelar</button>
           <button type="submit" class="px-4 py-2 text-sm font-semibold bg-brand-600 text-white hover:bg-brand-700 rounded-lg shadow-sm">Crear</button>
@@ -198,33 +186,24 @@
     </div>
   </div>
 
-  <!-- MODAL: SUBIR ARCHIVOS -->
   <div id="upload-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 relative">
       <button onclick="closeUploadModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up text-brand-600"></i> Subir Archivos a Firebase Storage</h2>
-      
-      <div id="drop-zone" 
-           ondragover="handleDragOver(event)" 
-           ondragleave="handleDragLeave(event)" 
-           ondrop="handleDrop(event)" 
-           onclick="document.getElementById('file-input').click()" 
-           class="border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-xl p-8 text-center cursor-pointer transition-all bg-slate-50 mb-4">
+      <div id="drop-zone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)" onclick="document.getElementById('file-input').click()" class="border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-xl p-8 text-center cursor-pointer transition-all bg-slate-50 mb-4">
         <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 mb-2"></i>
         <p class="text-sm font-semibold text-slate-700">Arrastra archivos aquí o haz clic para examinar</p>
         <p class="text-xs text-slate-400 mt-1">Soporta PDFs, imágenes, presentaciones y documentos sin límite de tamaño.</p>
         <input type="file" id="file-input" class="hidden" multiple onchange="handleFileSelect(event)">
       </div>
-      
       <div id="upload-status" class="text-xs text-brand-600 font-medium text-center hidden"></div>
-      
       <div class="flex justify-end gap-2 mt-4">
         <button onclick="closeUploadModal()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg">Cerrar</button>
       </div>
     </div>
   </div>
 
-  <!-- FIREBASE MODULES -->
+  <!-- FIREBASE SCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -283,6 +262,7 @@
     onSnapshot(foldersRef, (snapshot) => {
       window.appState.folders = snapshot.docs.map(doc => doc.data());
       window.renderFolders();
+      window.renderFiles();
     });
 
     onSnapshot(filesRef, (snapshot) => {
@@ -312,19 +292,35 @@
 
     window.handleCreateFolder = async function(e) {
       e.preventDefault();
-      const name = document.getElementById('folder-name-input').value.trim();
+      const input = document.getElementById('folder-name-input');
+      const errorDiv = document.getElementById('folder-error');
+      const name = input.value.trim();
       if (!name) return;
 
+      const currentParent = window.appState.currentFolderId;
+
+      const isDuplicate = window.appState.folders.some(f => 
+        (f.parentId || 'root') === currentParent && f.name.toLowerCase() === name.toLowerCase()
+      );
+
+      if (isDuplicate) {
+        errorDiv.textContent = `Ya existe una carpeta llamada "${name}" en esta ubicación.`;
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      errorDiv.classList.add('hidden');
       const folderId = 'folder-' + Date.now();
       const newFolder = {
         id: folderId,
         name: name,
+        parentId: currentParent,
         createdAt: new Date().toISOString()
       };
 
       await setDoc(doc(db, 'folders', folderId), newFolder);
       window.closeFolderModal();
-      document.getElementById('folder-name-input').value = '';
+      input.value = '';
     };
 
     window.selectFolder = function(folderId) {
@@ -345,9 +341,9 @@
         </button>
       `;
 
-      const userFolders = window.appState.folders.filter(f => f.id !== 'root' && f.name.toLowerCase() !== 'inicio');
+      const rootFolders = window.appState.folders.filter(f => (!f.parentId || f.parentId === 'root') && f.id !== 'root' && f.name.toLowerCase() !== 'inicio');
 
-      userFolders.forEach(f => {
+      rootFolders.forEach(f => {
         const isSelected = window.appState.currentFolderId === f.id;
         html += `
           <div class="group flex items-center justify-between rounded-xl ${isSelected ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}">
@@ -361,10 +357,43 @@
       });
 
       nav.innerHTML = html;
-
-      const currentFolder = window.appState.folders.find(f => f.id === window.appState.currentFolderId);
-      document.getElementById('current-folder-title').textContent = (window.appState.currentFolderId === 'root') ? 'Inicio' : (currentFolder ? currentFolder.name : 'Inicio');
+      renderBreadcrumb();
     };
+
+    function renderBreadcrumb() {
+      const container = document.getElementById('breadcrumb');
+      if (!container) return;
+
+      let path = [];
+      let currId = window.appState.currentFolderId;
+
+      while (currId && currId !== 'root') {
+        const f = window.appState.folders.find(item => item.id === currId);
+        if (f) {
+          path.unshift(f);
+          currId = f.parentId || 'root';
+        } else {
+          break;
+        }
+      }
+
+      let html = `
+        <button onclick="selectFolder('root')" class="hover:text-brand-600 transition-colors flex items-center gap-1.5">
+          <i class="fa-solid fa-house text-brand-600"></i> Inicio
+        </button>
+      `;
+
+      path.forEach(f => {
+        html += `
+          <span class="text-slate-300">/</span>
+          <button onclick="selectFolder('${f.id}')" class="hover:text-brand-600 transition-colors">
+            ${f.name}
+          </button>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
 
     window.renderFiles = function() {
       const tbody = document.getElementById('files-table-body');
@@ -372,13 +401,20 @@
       if (!tbody || !emptyState) return;
 
       const searchVal = (document.getElementById('search-input')?.value || '').toLowerCase();
+      const currentParent = window.appState.currentFolderId;
 
-      const currentFiles = window.appState.files.filter(f => 
-        f.folderId === window.appState.currentFolderId && 
+      const subfolders = window.appState.folders.filter(f => 
+        (f.parentId || 'root') === currentParent && 
+        f.id !== 'root' && 
         f.name.toLowerCase().includes(searchVal)
       );
 
-      if (currentFiles.length === 0) {
+      const currentFiles = window.appState.files.filter(f => 
+        (f.folderId || 'root') === currentParent && 
+        f.name.toLowerCase().includes(searchVal)
+      );
+
+      if (subfolders.length === 0 && currentFiles.length === 0) {
         tbody.innerHTML = '';
         emptyState.classList.remove('hidden');
         return;
@@ -386,6 +422,27 @@
 
       emptyState.classList.add('hidden');
       let html = '';
+
+      subfolders.forEach(folder => {
+        const dateFormatted = folder.createdAt ? new Date(folder.createdAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
+        html += `
+          <tr class="hover:bg-slate-50 transition-colors cursor-pointer" onclick="selectFolder('${folder.id}')">
+            <td class="py-3 px-4 font-semibold text-slate-800 flex items-center gap-3">
+              <i class="fa-solid fa-folder text-brand-500 text-lg"></i>
+              <span class="truncate max-w-xs sm:max-w-md">${folder.name}</span>
+            </td>
+            <td class="py-3 px-4 text-slate-500">Carpeta</td>
+            <td class="py-3 px-4 text-slate-400 text-xs">${dateFormatted}</td>
+            <td class="py-3 px-4 text-slate-400 text-xs">Carpeta de archivos</td>
+            <td class="py-3 px-4 text-right space-x-2" onclick="event.stopPropagation()">
+              <button onclick="selectFolder('${folder.id}')" class="inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all">
+                <i class="fa-solid fa-folder-open"></i> Abrir
+              </button>
+              ${window.appState.user ? `<button onclick="deleteFolder('${folder.id}')" class="inline-flex items-center gap-1 bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all"><i class="fa-solid fa-trash"></i></button>` : ''}
+            </td>
+          </tr>
+        `;
+      });
 
       currentFiles.forEach(file => {
         const dateFormatted = new Date(file.date).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -420,7 +477,7 @@
     };
 
     window.deleteFolder = async function(folderId) {
-      if (confirm('¿Deseas eliminar esta carpeta y su contenido?')) {
+      if (confirm('¿Deseas eliminar esta carpeta y todo su contenido?')) {
         await deleteDoc(doc(db, 'folders', folderId));
         if (window.appState.currentFolderId === folderId) {
           window.appState.currentFolderId = 'root';
@@ -436,7 +493,7 @@
             await deleteObject(fileRef);
           }
         } catch (e) {
-          console.warn('No se pudo eliminar de Storage:', e);
+          console.warn('No se pudo borrar de Storage:', e);
         }
         await deleteDoc(doc(db, 'files', fileId));
       }
@@ -488,7 +545,6 @@
           const storagePath = `uploads/${window.appState.currentFolderId}/${fileId}_${file.name}`;
           const storageRef = ref(storage, storagePath);
 
-          // Subida directa del archivo físico a Storage
           const snapshot = await uploadBytes(storageRef, file);
           const downloadUrl = await getDownloadURL(snapshot.ref);
 
@@ -503,7 +559,6 @@
             storagePath: storagePath
           };
 
-          // Guardar referencia liviana en Firestore
           await setDoc(doc(db, 'files', fileId), fileObj);
 
           status.textContent = '¡Archivo subido con éxito!';
@@ -522,7 +577,23 @@
     window.openLoginModal = () => document.getElementById('login-modal').classList.remove('hidden');
     window.closeLoginModal = () => document.getElementById('login-modal').classList.add('hidden');
 
-    window.openFolderModal = () => document.getElementById('folder-modal').classList.remove('hidden');
+    window.openFolderModal = () => {
+      const errorDiv = document.getElementById('folder-error');
+      if (errorDiv) errorDiv.classList.add('hidden');
+      
+      const currentParent = window.appState.currentFolderId;
+      const label = document.getElementById('folder-context-label');
+      if (label) {
+        if (currentParent === 'root') {
+          label.textContent = 'Se creará en la raíz principal (Inicio).';
+        } else {
+          const parentFolder = window.appState.folders.find(f => f.id === currentParent);
+          label.textContent = `Se creará dentro de la carpeta "${parentFolder ? parentFolder.name : ''}".`;
+        }
+      }
+      document.getElementById('folder-modal').classList.remove('hidden');
+    };
+
     window.closeFolderModal = () => document.getElementById('folder-modal').classList.add('hidden');
 
     window.openUploadModal = () => {
