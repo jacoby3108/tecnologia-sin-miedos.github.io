@@ -371,37 +371,41 @@
       setupDragAndDrop();
     };
 
-    function initStorage() {
-      const savedConfig = localStorage.getItem('tms_firebase_config');
-      if (savedConfig) {
-        try {
-          const config = JSON.parse(savedConfig);
-          firebaseApp = initializeApp(config);
-          auth = getAuth(firebaseApp);
-          db = getFirestore(firebaseApp);
-          appState.useFirebase = true;
+  function initStorage() {
+  const config = {
+    apiKey: "AIzaSyBWXT_DIYDFzuoQ7NXjKz8zdrYihhSqJI8",
+    authDomain: "tecnologia-sin-miedos.firebaseapp.com",
+    projectId: "tecnologia-sin-miedos",
+    storageBucket: "tecnologia-sin-miedos.firebasestorage.app",
+    messagingSenderId: "83121002854",
+    appId: "1:83121002854:web:7f35234d291d22dbdad0a7"
+  };
 
-          document.getElementById('storage-mode-indicator').innerHTML = `<i class="fa-solid fa-cloud text-emerald-500"></i> Conectado a Firebase`;
+  try {
+    firebaseApp = initializeApp(config);
+    auth = getAuth(firebaseApp);
+    db = getFirestore(firebaseApp);
+    appState.useFirebase = true;
 
-          // Auth Listener
-          onAuthStateChanged(auth, (user) => {
-            if (user) {
-              appState.user = { email: user.email, uid: user.uid };
-            } else {
-              appState.user = null;
-            }
-            updateAuthUI();
-            renderUI();
-          });
+    document.getElementById('storage-mode-indicator').innerHTML = `<i class="fa-solid fa-cloud text-emerald-500"></i> Conectado a Firebase`;
 
-          // Sync data from Firestore
-          syncFirestoreData();
-          return;
-        } catch (e) {
-          console.error("Firebase Initialization Failed:", e);
-        }
+    // Auth Listener
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        appState.user = { email: user.email, uid: user.uid };
+      } else {
+        appState.user = null;
       }
+      updateAuthUI();
+      renderUI();
+    });
 
+    // Sync data from Firestore
+    syncFirestoreData();
+  } catch (e) {
+    console.error("Firebase Initialization Failed:", e);
+  }
+}
       // Fallback: Local Storage Mode
       appState.useFirebase = false;
       document.getElementById('storage-mode-indicator').innerHTML = `<i class="fa-solid fa-hard-drive text-amber-500"></i> Modo Simulación`;
