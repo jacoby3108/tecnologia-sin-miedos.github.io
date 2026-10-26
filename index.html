@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tecnología sin Miedos v1.0.3 - Portal de Archivos</title>
+  <title>Tecnología sin Miedos v1.0.4 - Portal de Archivos</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -38,7 +38,7 @@
         <div>
           <div class="flex items-center gap-2">
             <h1 class="text-lg font-bold text-slate-900 leading-none">Tecnología sin Miedos</h1>
-            <span class="text-[10px] font-semibold bg-brand-100 text-brand-700 px-1.5 py-0.5 rounded-md">v1.0.3</span>
+            <span class="text-[10px] font-semibold bg-brand-100 text-brand-700 px-1.5 py-0.5 rounded-md">v1.0.4</span>
           </div>
           <p class="text-xs text-slate-500 mt-0.5">Materiales de Estudio y Documentos</p>
         </div>
@@ -134,7 +134,7 @@
   <!-- FOOTER -->
   <footer class="bg-white border-t border-slate-200 mt-auto py-4">
     <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400 flex justify-between items-center">
-      <span>UNI3 Maldonado &copy; 2026 - Tecnología sin Miedos <span class="ml-1 text-slate-300">v1.0.3</span></span>
+      <span>UNI3 Maldonado &copy; 2026 - Tecnología sin Miedos <span class="ml-1 text-slate-300">v1.0.4</span></span>
       <span id="connection-status" class="flex items-center gap-1.5 text-slate-400">
         <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> Firebase Conectado
       </span>
@@ -395,6 +395,26 @@
       container.innerHTML = html;
     }
 
+    // DESCARGA DE ARCHIVOS FORZANDO NOMBRE ORIGINAL CON BLOB
+    window.downloadFile = async function(url, fileName) {
+      try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const blobUrl = window.URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
+      } catch (err) {
+        window.open(url, '_blank');
+      }
+    };
+
     window.renderFiles = function() {
       const tbody = document.getElementById('files-table-body');
       const emptyState = document.getElementById('empty-state');
@@ -460,9 +480,9 @@
             <td class="py-3 px-4 text-slate-400 text-xs">${dateFormatted}</td>
             <td class="py-3 px-4 text-slate-400 text-xs">${sizeFormatted}</td>
             <td class="py-3 px-4 text-right space-x-2">
-              <a href="${file.url}" target="_blank" download="${file.name}" class="inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all">
+              <button onclick="downloadFile('${file.url}', '${file.name}')" class="inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all">
                 <i class="fa-solid fa-download"></i> Descargar
-              </a>
+              </button>
               ${window.appState.user ? `<button onclick="deleteFile('${file.id}', '${file.storagePath}')" class="inline-flex items-center gap-1 bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all"><i class="fa-solid fa-trash"></i></button>` : ''}
             </td>
           </tr>
@@ -518,90 +538,3 @@
       e.stopPropagation();
       const zone = document.getElementById('drop-zone');
       if (zone) zone.classList.remove('border-brand-500', 'bg-brand-50');
-
-      if (e.dataTransfer && e.dataTransfer.files.length > 0) {
-        processFiles(e.dataTransfer.files);
-      }
-    };
-
-    window.handleFileSelect = function(e) {
-      if (e.target.files && e.target.files.length > 0) {
-        processFiles(e.target.files);
-      }
-    };
-
-    async function processFiles(files) {
-      const status = document.getElementById('upload-status');
-      if (!status) return;
-
-      status.classList.remove('hidden', 'text-red-600');
-      status.classList.add('text-brand-600');
-
-      for (const file of Array.from(files)) {
-        status.textContent = `Subiendo "${file.name}" a Firebase Storage...`;
-
-        try {
-          const fileId = 'file-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4);
-          const storagePath = `uploads/${window.appState.currentFolderId}/${fileId}_${file.name}`;
-          const storageRef = ref(storage, storagePath);
-
-          const snapshot = await uploadBytes(storageRef, file);
-          const downloadUrl = await getDownloadURL(snapshot.ref);
-
-          const fileObj = {
-            id: fileId,
-            folderId: window.appState.currentFolderId,
-            name: file.name,
-            size: file.size,
-            date: new Date().toISOString(),
-            uploader: window.appState.user ? window.appState.user.email.split('@')[0] : 'Docente',
-            url: downloadUrl,
-            storagePath: storagePath
-          };
-
-          await setDoc(doc(db, 'files', fileId), fileObj);
-
-          status.textContent = '¡Archivo subido con éxito!';
-          setTimeout(() => {
-            status.classList.add('hidden');
-            window.closeUploadModal();
-          }, 800);
-        } catch (err) {
-          status.classList.remove('text-brand-600');
-          status.classList.add('text-red-600');
-          status.textContent = `Error al subir: ${err.message}`;
-        }
-      }
-    }
-
-    window.openLoginModal = () => document.getElementById('login-modal').classList.remove('hidden');
-    window.closeLoginModal = () => document.getElementById('login-modal').classList.add('hidden');
-
-    window.openFolderModal = () => {
-      const errorDiv = document.getElementById('folder-error');
-      if (errorDiv) errorDiv.classList.add('hidden');
-      
-      const currentParent = window.appState.currentFolderId;
-      const label = document.getElementById('folder-context-label');
-      if (label) {
-        if (currentParent === 'root') {
-          label.textContent = 'Se creará en la raíz principal (Inicio).';
-        } else {
-          const parentFolder = window.appState.folders.find(f => f.id === currentParent);
-          label.textContent = `Se creará dentro de la carpeta "${parentFolder ? parentFolder.name : ''}".`;
-        }
-      }
-      document.getElementById('folder-modal').classList.remove('hidden');
-    };
-
-    window.closeFolderModal = () => document.getElementById('folder-modal').classList.add('hidden');
-
-    window.openUploadModal = () => {
-      const status = document.getElementById('upload-status');
-      if (status) status.classList.add('hidden');
-      document.getElementById('upload-modal').classList.remove('hidden');
-    };
-    window.closeUploadModal = () => document.getElementById('upload-modal').classList.add('hidden');
-  </script>
-</body>
-</html>
