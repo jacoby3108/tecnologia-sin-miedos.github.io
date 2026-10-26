@@ -1,187 +1,266 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-full bg-slate-50">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tecnología sin Miedos - Gestor de Documentos</title>
+  <title>Tecnología sin Miedos - Materiales y Documentos</title>
+  
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'] },
           colors: {
-            brand: { 50: '#f0f9ff', 100: '#e0f2fe', 500: '#0284c7', 600: '#0369a1', 700: '#075985', 800: '#0c4a6e' }
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+              800: '#0c4a6e',
+            }
           }
         }
       }
     }
   </script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+<body class="h-full flex flex-col text-slate-800 bg-slate-50">
 
-  <!-- TOP HEADER -->
+  <!-- TOP NAVBAR -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="bg-brand-600 text-white p-2.5 rounded-xl shadow-md">
-          <i class="fa-solid fa-graduation-cap text-xl"></i>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        
+        <!-- Logo & Portal Name -->
+        <div class="flex items-center gap-3">
+          <div class="bg-brand-600 text-white p-2.5 rounded-xl shadow-md">
+            <i class="fa-solid fa-graduation-cap text-xl"></i>
+          </div>
+          <div>
+            <h1 class="text-lg font-bold text-slate-900 leading-tight">Tecnología sin Miedos</h1>
+            <p class="text-xs text-slate-500">Portal de Materiales de Estudio y Documentos</p>
+          </div>
         </div>
-        <div>
-          <h1 class="text-lg font-bold text-slate-900 leading-tight">Tecnología sin Miedos</h1>
-          <p class="text-xs text-slate-500 font-medium">Materiales de Estudio y Documentos</p>
-        </div>
-      </div>
 
-      <div class="flex items-center space-x-3">
-        <div id="role-badge" class="px-3 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600 border border-slate-200 flex items-center gap-1.5">
-          <i class="fa-solid fa-user-graduate"></i>
-          <span>Modo Estudiante</span>
+        <!-- User Role Status & Auth Buttons -->
+        <div class="flex items-center gap-3">
+          <div id="role-badge" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+            <i class="fa-solid fa-user-graduate"></i>
+            <span id="role-text">Modo Estudiante</span>
+          </div>
+
+          <!-- Teacher Action Button -->
+          <button id="auth-btn" onclick="openLoginModal()" class="flex items-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all duration-200 active:scale-95">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span>Acceso Docentes</span>
+          </button>
         </div>
-        <button id="auth-btn" onclick="openAuthModal()" class="inline-flex items-center gap-2 px-3.5 py-1.5 text-sm font-medium text-brand-700 bg-brand-50 hover:bg-brand-100 rounded-lg transition-colors border border-brand-200">
-          <i class="fa-solid fa-right-to-bracket"></i>
-          <span>Acceso Docentes</span>
-        </button>
+
       </div>
     </div>
   </header>
 
-  <!-- MAIN WRAPPER -->
+  <!-- MAIN APP CONTAINER -->
   <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row gap-6">
 
-    <!-- SIDEBAR: FOLDER TREE -->
-    <aside class="w-full md:w-64 flex-shrink-0 bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-col h-[calc(100vh-8rem)] md:sticky md:top-20">
-      <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Carpetas</h2>
-        <button onclick="renderUI()" title="Actualizar" class="text-slate-400 hover:text-slate-600 p-1">
-          <i class="fa-solid fa-rotate-right text-xs"></i>
+    <!-- SIDEBAR: FOLDER TREE & MANAGEMENT -->
+    <aside class="w-full md:w-64 shrink-0 flex flex-col gap-4">
+      
+      <!-- Management Tools (Docentes Only) -->
+      <div id="teacher-actions" class="hidden flex flex-col gap-2">
+        <button onclick="openFolderModal()" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded-xl shadow-sm transition-all">
+          <i class="fa-solid fa-folder-plus text-brand-500"></i>
+          <span>Nueva Carpeta</span>
+        </button>
+        <button onclick="openUploadModal()" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-xl shadow-sm transition-all">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <span>Subir Archivos</span>
         </button>
       </div>
 
-      <div id="teacher-sidebar-actions" class="hidden mb-4 space-y-2">
-        <button onclick="openNewFolderModal()" class="w-full py-2 px-3 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors shadow-sm">
-          <i class="fa-solid fa-folder-plus"></i> Nueva Carpeta
-        </button>
-        <button onclick="openUploadModal()" class="w-full py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors shadow-sm">
-          <i class="fa-solid fa-cloud-arrow-up"></i> Subir Archivo
-        </button>
+      <!-- Navigation Tree Panel -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex-1 flex flex-col">
+        <div class="flex items-center justify-between mb-3 px-1">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Carpetas</h2>
+          <button onclick="loadData()" class="text-slate-400 hover:text-brand-600 text-xs p-1" title="Actualizar">
+            <i class="fa-solid fa-rotate-right"></i>
+          </button>
+        </div>
+
+        <nav id="folder-tree" class="flex-1 overflow-y-auto custom-scrollbar space-y-1 pr-1">
+          <!-- Dynamic Folder Tree Item -->
+          <button onclick="navigateToFolder('root')" id="folder-btn-root" class="w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium rounded-xl transition-all bg-brand-50 text-brand-700">
+            <i class="fa-solid fa-folder-open text-brand-600"></i>
+            <span class="truncate">Inicio</span>
+          </button>
+          <div id="subfolders-container" class="pl-3 space-y-1 border-l-2 border-slate-100 mt-1">
+            <!-- Dynamic Subfolders Rendered Here -->
+          </div>
+        </nav>
       </div>
 
-      <nav id="folder-tree" class="flex-1 overflow-y-auto pr-1 space-y-1"></nav>
-
-      <div class="mt-auto pt-3 border-t border-slate-100 text-xs text-slate-400 flex items-center justify-between">
-        <span id="storage-mode-indicator"><i class="fa-solid fa-cloud text-emerald-500"></i> Firebase Conectado</span>
+      <!-- Connection Status Badge -->
+      <div class="flex items-center justify-between px-3 py-2 bg-white rounded-xl border border-slate-200 text-xs text-slate-500">
+        <span class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          Firebase Conectado
+        </span>
+        <i class="fa-solid fa-shield-halved text-emerald-600"></i>
       </div>
     </aside>
 
     <!-- MAIN CONTENT VIEW -->
-    <main class="flex-1 bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-col">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
-        <nav id="breadcrumbs" class="flex items-center flex-wrap text-sm text-slate-600 font-medium gap-1"></nav>
+    <main class="flex-1 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+      
+      <!-- HEADER BAR: SEARCH & BREADCRUMBS -->
+      <div class="p-4 sm:p-6 border-b border-slate-100 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-slate-50/50">
+        
+        <!-- Breadcrumbs Navigation -->
+        <nav class="flex items-center gap-2 text-sm font-medium text-slate-600 overflow-x-auto max-w-full py-1" id="breadcrumbs">
+          <button onclick="navigateToFolder('root')" class="hover:text-brand-600 flex items-center gap-1.5">
+            <i class="fa-solid fa-house text-slate-400 text-xs"></i>
+            <span>Inicio</span>
+          </button>
+        </nav>
+
+        <!-- Search Bar -->
         <div class="relative w-full sm:w-64">
           <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-          <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Buscar archivos..." class="w-full pl-8 pr-3 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500">
+          <input type="text" id="search-input" oninput="handleSearch()" placeholder="Buscar archivos..." class="w-full pl-9 pr-4 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all">
         </div>
       </div>
 
-      <div id="teacher-action-bar" class="hidden my-3 p-3 bg-brand-50 border border-brand-100 rounded-lg flex items-center justify-between">
-        <span class="text-xs font-semibold text-brand-800"><i class="fa-solid fa-lock text-brand-600 mr-1"></i> Panel Docente Activo</span>
-        <div class="flex items-center gap-2">
-          <button onclick="openNewFolderModal()" class="px-3 py-1.5 text-xs font-medium bg-white text-brand-700 hover:bg-slate-50 rounded border border-brand-200 shadow-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-folder-plus"></i> Nueva Carpeta
-          </button>
-          <button onclick="openUploadModal()" class="px-3 py-1.5 text-xs font-medium bg-brand-600 text-white hover:bg-brand-700 rounded shadow-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-upload"></i> Subir Archivo
-          </button>
-        </div>
-      </div>
-
-      <div class="flex-1 overflow-x-auto mt-2">
+      <!-- FILES & FOLDERS CONTENT TABLE -->
+      <div class="flex-1 overflow-auto custom-scrollbar">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="border-b border-slate-200 text-xs font-bold text-slate-400 uppercase tracking-wider">
-              <th class="py-3 px-3">Nombre</th>
-              <th class="py-3 px-3 hidden sm:table-cell">Subido Por</th>
-              <th class="py-3 px-3 hidden md:table-cell">Fecha</th>
-              <th class="py-3 px-3 hidden sm:table-cell">Tamaño</th>
-              <th class="py-3 px-3 text-right">Acciones</th>
+            <tr class="border-b border-slate-100 text-[11px] font-bold text-slate-400 uppercase tracking-wider bg-slate-50/80 sticky top-0">
+              <th class="py-3 px-4 sm:px-6">Nombre</th>
+              <th class="py-3 px-4 hidden md:table-cell">Subido Por</th>
+              <th class="py-3 px-4 hidden sm:table-cell">Fecha</th>
+              <th class="py-3 px-4 hidden sm:table-cell">Tamaño</th>
+              <th class="py-3 px-4 sm:px-6 text-right">Acciones</th>
             </tr>
           </thead>
-          <tbody id="file-list-body" class="divide-y divide-slate-100 text-sm"></tbody>
+          <tbody id="files-table-body" class="divide-y divide-slate-100 text-sm">
+            <!-- Dynamic Content Rows -->
+          </tbody>
         </table>
 
-        <div id="empty-state" class="hidden flex-col items-center justify-center py-16 text-center">
-          <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mb-3 text-2xl">
-            <i class="fa-regular fa-folder-open"></i>
+        <!-- EMPTY STATE CONTAINER -->
+        <div id="empty-state" class="hidden flex flex-col items-center justify-center p-12 text-center">
+          <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center text-2xl mb-3">
+            <i class="fa-solid fa-folder-open"></i>
           </div>
-          <h3 class="text-base font-semibold text-slate-700">Esta carpeta está vacía</h3>
-          <p class="text-xs text-slate-400 max-w-sm mt-1">No hay elementos guardados en esta ubicación.</p>
+          <h3 class="text-slate-700 font-semibold text-base mb-1">Esta carpeta está vacía</h3>
+          <p class="text-slate-400 text-xs max-w-sm">No hay elementos guardados en esta ubicación.</p>
         </div>
       </div>
+
     </main>
   </div>
 
-  <!-- AUTH MODAL -->
-  <div id="auth-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+  <!-- MODAL: LOGIN DOCENTES -->
+  <div id="login-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100 relative">
-      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      
       <div class="text-center mb-6">
-        <div class="w-12 h-12 bg-brand-100 text-brand-600 rounded-xl mx-auto flex items-center justify-center text-xl font-bold mb-2"><i class="fa-solid fa-user-shield"></i></div>
+        <div class="w-12 h-12 bg-brand-50 text-brand-600 rounded-xl flex items-center justify-center mx-auto mb-3 text-xl">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
         <h2 class="text-xl font-bold text-slate-800">Acceso para Docentes</h2>
         <p class="text-xs text-slate-500 mt-1">Ingresa tus credenciales para administrar archivos.</p>
       </div>
+
       <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Correo Electrónico</label>
-          <input type="email" id="login-email" required class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500">
+          <input type="email" id="login-email" value="itba.jacoby@gmail.com" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Contraseña</label>
-          <input type="password" id="login-password" required class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500">
+          <input type="password" id="login-password" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500">
         </div>
-        <div id="auth-error" class="hidden p-2.5 bg-rose-50 text-rose-600 text-xs rounded-lg font-medium"></div>
-        <button type="submit" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-lg font-medium text-sm transition-colors shadow-sm">Iniciar Sesión</button>
+
+        <div id="login-error" class="hidden p-3 bg-red-50 text-red-600 text-xs rounded-xl font-medium"></div>
+
+        <button type="submit" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl shadow-sm text-sm transition-all">Iniciar Sesión</button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL: UPLOAD FILE -->
-  <div id="upload-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 relative">
-      <button onclick="closeUploadModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-      <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up text-brand-600"></i> Subir Archivos</h2>
-      <div id="drop-zone" class="border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-xl p-6 text-center cursor-pointer transition-all bg-slate-50 mb-4" onclick="document.getElementById('file-input').click()">
-        <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 mb-2"></i>
-        <p class="text-sm font-semibold text-slate-700">Arrastra archivos aquí o haz clic para examinar</p>
-        <input type="file" id="file-input" class="hidden" multiple onchange="handleFileSelect(event)">
-      </div>
-      <div id="upload-queue" class="space-y-2 max-h-48 overflow-y-auto mb-4"></div>
-      <div class="flex justify-end gap-2">
-        <button onclick="closeUploadModal()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg">Cerrar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: NEW FOLDER -->
+  <!-- MODAL: NUEVA CARPETA -->
   <div id="folder-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-100 relative">
       <button onclick="closeFolderModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-folder-plus text-brand-600"></i> Nueva Carpeta</h2>
-      <input type="text" id="new-folder-name" placeholder="Nombre de la carpeta" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 mb-4">
+      
+      <form onsubmit="handleCreateFolder(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre de la Carpeta</label>
+          <input type="text" id="folder-name-input" required placeholder="Ej. Módulo 1: Teléfonos" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500">
+        </div>
+        <div class="flex justify-end gap-2">
+          <button type="button" onclick="closeFolderModal()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl">Cancelar</button>
+          <button type="submit" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded-xl">Crear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: SUBIR ARCHIVOS (DRAG AND DROP) -->
+  <div id="upload-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 relative">
+      <button onclick="closeUploadModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up text-brand-600"></i> Subir Archivos</h2>
+      
+      <div id="drop-zone" 
+           ondragover="handleDragOver(event)" 
+           ondragleave="handleDragLeave(event)" 
+           ondrop="handleDrop(event)" 
+           onclick="document.getElementById('file-input').click()" 
+           class="border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-xl p-8 text-center cursor-pointer transition-all bg-slate-50 mb-4">
+        <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 mb-2"></i>
+        <p class="text-sm font-semibold text-slate-700">Arrastra archivos aquí o haz clic para examinar</p>
+        <p class="text-xs text-slate-400 mt-1">PDFs, documentos, imágenes o guías de clase</p>
+        <input type="file" id="file-input" class="hidden" multiple onchange="handleFileSelect(event)">
+      </div>
+      
+      <div id="upload-status" class="text-xs text-brand-600 font-medium text-center hidden mb-2">Cargando archivo(s)...</div>
+      
       <div class="flex justify-end gap-2">
-        <button onclick="closeFolderModal()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg">Cancelar</button>
-        <button onclick="createNewFolder()" class="px-4 py-2 text-sm font-medium bg-brand-600 hover:bg-brand-700 text-white rounded-lg">Crear</button>
+        <button onclick="closeUploadModal()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl">Cerrar</button>
       </div>
     </div>
   </div>
 
-  <!-- SCRIPT APPLICATION -->
+  <!-- FIREBASE MODULAR SDK LOGIC -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Clean obsolete keys in browser cache
+    try { localStorage.clear(); } catch(e){}
 
     const firebaseConfig = {
       apiKey: "AIzaSyAn1ziwrWlSp9YZuaif78FdzJeYGY4Prc0",
@@ -192,272 +271,302 @@
       appId: "1:83121002854:web:7f35234d291d22dbdad0a7"
     };
 
-    const firebaseApp = initializeApp(firebaseConfig);
-    const auth = getAuth(firebaseApp);
-    const db = getFirestore(firebaseApp);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    let appState = {
+    // Global App State
+    window.appState = {
       user: null,
       currentFolderId: 'root',
-      searchQuery: '',
       folders: [],
-      files: []
+      files: [],
+      searchQuery: ''
     };
 
-    const DEFAULT_FOLDERS = [
-      { id: 'root', name: 'Inicio', parentId: null }
-    ];
+    // Firebase Collections paths
+    const FOLDERS_REF = collection(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'folders');
+    const FILES_REF = collection(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'files');
 
-    window.onload = function() {
-      localStorage.clear(); // Clear any corrupt cached configurations
+    // Live Snapshot Listeners
+    onSnapshot(FOLDERS_REF, (snapshot) => {
+      window.appState.folders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      renderApp();
+    });
 
-      onAuthStateChanged(auth, (user) => {
-        appState.user = user ? { email: user.email, uid: user.uid } : null;
-        updateAuthUI();
-        renderUI();
-      });
+    onSnapshot(FILES_REF, (snapshot) => {
+      window.appState.files = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      renderApp();
+    });
 
-      syncFirestoreData();
-    };
-
-    function syncFirestoreData() {
-      const appId = 'tecnologia-sin-miedos';
-
-      onSnapshot(query(collection(db, 'artifacts', appId, 'public', 'data', 'folders')), (snapshot) => {
-        if (!snapshot.empty) {
-          appState.folders = snapshot.docs.map(d => d.data());
-        } else {
-          DEFAULT_FOLDERS.forEach(f => {
-            setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'folders', f.id), f);
-          });
-          appState.folders = DEFAULT_FOLDERS;
-        }
-        renderUI();
-      });
-
-      onSnapshot(query(collection(db, 'artifacts', appId, 'public', 'data', 'files')), (snapshot) => {
-        appState.files = snapshot.empty ? [] : snapshot.docs.map(d => d.data());
-        renderUI();
-      });
-    }
-
-    window.renderUI = function() {
-      renderFolderTree();
-      renderBreadcrumbs();
-      renderFileList();
-      updateAuthUI();
-    };
-
-    function updateAuthUI() {
+    // Authentication State Change Listener
+    onAuthStateChanged(auth, (user) => {
+      window.appState.user = user;
       const roleBadge = document.getElementById('role-badge');
+      const roleText = document.getElementById('role-text');
       const authBtn = document.getElementById('auth-btn');
-      const teacherBar = document.getElementById('teacher-action-bar');
-      const teacherSidebar = document.getElementById('teacher-sidebar-actions');
+      const teacherActions = document.getElementById('teacher-actions');
 
-      if (appState.user) {
-        roleBadge.className = "px-3 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200 flex items-center gap-1.5";
-        roleBadge.innerHTML = `<i class="fa-solid fa-chalkboard-user"></i> Modo Docente (${appState.user.email})`;
-        authBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket"></i> <span>Cerrar Sesión</span>`;
-        authBtn.onclick = handleLogout;
-        teacherBar.classList.remove('hidden');
-        teacherSidebar.classList.remove('hidden');
+      if (user) {
+        roleBadge.className = "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200";
+        roleText.textContent = `Modo Docente (${user.email})`;
+        authBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket"></i><span>Cerrar Sesión</span>`;
+        authBtn.onclick = () => signOut(auth);
+        teacherActions.classList.remove('hidden');
       } else {
-        roleBadge.className = "px-3 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600 border border-slate-200 flex items-center gap-1.5";
-        roleBadge.innerHTML = `<i class="fa-solid fa-user-graduate"></i> Modo Estudiante`;
-        authBtn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> <span>Acceso Docentes</span>`;
-        authBtn.onclick = openAuthModal;
-        teacherBar.classList.add('hidden');
-        teacherSidebar.classList.add('hidden');
+        roleBadge.className = "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200";
+        roleText.textContent = "Modo Estudiante";
+        authBtn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i><span>Acceso Docentes</span>`;
+        authBtn.onclick = () => openLoginModal();
+        teacherActions.classList.add('hidden');
       }
-    }
+      renderApp();
+    });
 
-    function renderFolderTree() {
-      const container = document.getElementById('folder-tree');
-      container.innerHTML = '';
+    // LOGIN HANDLER
+    window.handleLogin = async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const errorDiv = document.getElementById('login-error');
 
-      function buildTree(parentId, depth = 0) {
-        const subfolders = appState.folders.filter(f => f.parentId === parentId);
-        subfolders.forEach(folder => {
-          const isActive = folder.id === appState.currentFolderId;
-          const item = document.createElement('div');
-          item.className = `flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm cursor-pointer transition-colors ${
-            isActive ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-slate-600 hover:bg-slate-100'
-          }`;
-          item.style.paddingLeft = `${(depth * 12) + 10}px`;
-          item.innerHTML = `
-            <div class="flex items-center gap-2 truncate" onclick="navigateToFolder('${folder.id}')">
-              <i class="fa-solid ${isActive ? 'fa-folder-open text-brand-600' : 'fa-folder text-slate-400'} text-xs"></i>
-              <span class="truncate">${folder.name}</span>
-            </div>
-            ${appState.user && folder.id !== 'root' ? `
-              <button onclick="deleteFolder('${folder.id}')" class="opacity-0 hover:opacity-100 p-1 text-rose-600 text-xs" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
-            ` : ''}
-          `;
-          container.appendChild(item);
-          buildTree(folder.id, depth + 1);
-        });
+      try {
+        errorDiv.classList.add('hidden');
+        await signInWithEmailAndPassword(auth, email, password);
+        closeLoginModal();
+      } catch (err) {
+        errorDiv.classList.remove('hidden');
+        errorDiv.textContent = 'Error de autenticación: Verifica el usuario o la contraseña.';
       }
-      buildTree(null, 0);
-    }
+    };
 
-    function renderBreadcrumbs() {
-      const nav = document.getElementById('breadcrumbs');
-      nav.innerHTML = '';
-      let chain = [];
-      let curr = appState.folders.find(f => f.id === appState.currentFolderId);
-      while (curr) {
-        chain.unshift(curr);
-        curr = appState.folders.find(f => f.id === curr.parentId);
-      }
-      chain.forEach((folder, index) => {
-        const isLast = index === chain.length - 1;
-        const btn = document.createElement('button');
-        btn.onclick = () => navigateToFolder(folder.id);
-        btn.className = isLast ? 'text-slate-900 font-bold cursor-default' : 'hover:text-brand-600';
-        btn.textContent = folder.name;
-        nav.appendChild(btn);
-        if (!isLast) {
-          const sep = document.createElement('span');
-          sep.className = 'text-slate-300 mx-1';
-          sep.textContent = '/';
-          nav.appendChild(sep);
-        }
-      });
-    }
-
-    function renderFileList() {
-      const tbody = document.getElementById('file-list-body');
-      const emptyState = document.getElementById('empty-state');
-      tbody.innerHTML = '';
-
-      let subfolders = appState.folders.filter(f => f.parentId === appState.currentFolderId);
-      let files = appState.files.filter(f => f.folderId === appState.currentFolderId);
-
-      if (appState.searchQuery.trim() !== '') {
-        const q = appState.searchQuery.toLowerCase();
-        subfolders = [];
-        files = appState.files.filter(f => f.name.toLowerCase().includes(q));
-      }
-
-      if (subfolders.length === 0 && files.length === 0) {
-        emptyState.classList.remove('hidden');
-        emptyState.classList.add('flex');
-        return;
-      } else {
-        emptyState.classList.add('hidden');
-        emptyState.classList.remove('flex');
-      }
-
-      subfolders.forEach(folder => {
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-50 cursor-pointer transition-colors';
-        tr.onclick = (e) => { if (!e.target.closest('button')) navigateToFolder(folder.id); };
-        tr.innerHTML = `
-          <td class="py-3 px-3 font-medium text-slate-800 flex items-center gap-2.5">
-            <i class="fa-solid fa-folder text-amber-500 text-lg"></i>
-            <span>${folder.name}</span>
-          </td>
-          <td class="py-3 px-3 text-slate-400 text-xs hidden sm:table-cell">-</td>
-          <td class="py-3 px-3 text-slate-400 text-xs hidden md:table-cell">-</td>
-          <td class="py-3 px-3 text-slate-400 text-xs hidden sm:table-cell">Carpeta</td>
-          <td class="py-3 px-3 text-right">
-            ${appState.user ? `<button onclick="deleteFolder('${folder.id}')" class="p-1.5 text-slate-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i></button>` : ''}
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      files.forEach(file => {
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-50 transition-colors';
-        tr.innerHTML = `
-          <td class="py-3 px-3 font-medium text-slate-800 flex items-center gap-2.5">
-            <i class="fa-solid fa-file-pdf text-rose-500 text-lg"></i>
-            <span class="truncate max-w-xs">${file.name}</span>
-          </td>
-          <td class="py-3 px-3 text-slate-500 text-xs hidden sm:table-cell">${file.uploader || 'Docente'}</td>
-          <td class="py-3 px-3 text-slate-500 text-xs hidden md:table-cell">${new Date(file.date).toLocaleDateString()}</td>
-          <td class="py-3 px-3 text-slate-500 text-xs hidden sm:table-cell">${(file.size / 1024).toFixed(1)} KB</td>
-          <td class="py-3 px-3 text-right">
-            <div class="flex items-center justify-end gap-1">
-              <a href="${file.url}" download="${file.name}" class="px-3 py-1 bg-brand-50 hover:bg-brand-100 text-brand-700 rounded-md text-xs font-semibold flex items-center gap-1.5">
-                <i class="fa-solid fa-download"></i> Descargar
-              </a>
-              ${appState.user ? `<button onclick="deleteFile('${file.id}')" class="p-1.5 text-slate-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i></button>` : ''}
-            </div>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    window.navigateToFolder = (id) => { appState.currentFolderId = id; renderUI(); };
-    window.handleSearch = (q) => { appState.searchQuery = q; renderFileList(); };
-
-    window.createNewFolder = async function() {
-      const name = document.getElementById('new-folder-name').value.trim();
+    // FOLDER CREATION HANDLER
+    window.handleCreateFolder = async function(e) {
+      e.preventDefault();
+      const input = document.getElementById('folder-name-input');
+      const name = input.value.trim();
       if (!name) return;
-      const folder = { id: 'f-' + Date.now(), name, parentId: appState.currentFolderId };
-      await setDoc(doc(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'folders', folder.id), folder);
-      document.getElementById('new-folder-name').value = '';
+
+      const folderObj = {
+        id: 'folder-' + Date.now(),
+        name: name,
+        parentId: window.appState.currentFolderId,
+        createdAt: new Date().toISOString()
+      };
+
+      await setDoc(doc(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'folders', folderObj.id), folderObj);
+      input.value = '';
       closeFolderModal();
     };
 
-    window.deleteFolder = async (id) => {
-      if (confirm("¿Eliminar carpeta?")) {
-        await deleteDoc(doc(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'folders', id));
-        if (appState.currentFolderId === id) appState.currentFolderId = 'root';
+    // FILE UPLOAD PROCESSOR
+    window.processFiles = function(files) {
+      const status = document.getElementById('upload-status');
+      if (status) {
+        status.classList.remove('hidden');
+        status.textContent = 'Procesando archivo(s)...';
       }
-    };
 
-    window.deleteFile = async (id) => {
-      if (confirm("¿Eliminar archivo?")) {
-        await deleteDoc(doc(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'files', id));
-      }
-    };
-
-    window.handleFileSelect = function(e) {
-      Array.from(e.target.files).forEach(file => {
+      Array.from(files).forEach(file => {
         const reader = new FileReader();
         reader.onload = async (evt) => {
           const fileObj = {
             id: 'file-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4),
-            folderId: appState.currentFolderId,
+            folderId: window.appState.currentFolderId,
             name: file.name,
             size: file.size,
             date: new Date().toISOString(),
-            uploader: appState.user ? appState.user.email.split('@')[0] : 'Docente',
+            uploader: window.appState.user ? window.appState.user.email.split('@')[0] : 'Docente',
             url: evt.target.result
           };
+          
           await setDoc(doc(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'files', fileObj.id), fileObj);
+          if (status) status.classList.add('hidden');
           closeUploadModal();
         };
         reader.readAsDataURL(file);
       });
     };
 
-    window.handleLogin = async function(e) {
-      e.preventDefault();
-      const email = document.getElementById('login-email').value;
-      const pass = document.getElementById('login-password').value;
-      const errorDiv = document.getElementById('auth-error');
-      try {
-        await signInWithEmailAndPassword(auth, email, pass);
-        closeAuthModal();
-      } catch (err) {
-        errorDiv.textContent = "Error de autenticación: " + err.message;
-        errorDiv.classList.remove('hidden');
+    // DELETE ITEM HANDLER
+    window.deleteItem = async function(type, id) {
+      if (!window.appState.user) return;
+      if (confirm('¿Estás seguro de que deseas eliminar este elemento?')) {
+        const collectionName = type === 'folder' ? 'folders' : 'files';
+        await deleteDoc(doc(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', collectionName, id));
       }
     };
 
-    window.handleLogout = () => signOut(auth);
+    // RENDER MAIN APPLICATION UI
+    window.renderApp = function() {
+      const { currentFolderId, folders, files, searchQuery, user } = window.appState;
+      
+      // 1. Render Subfolders Tree Sidebar
+      const subfoldersContainer = document.getElementById('subfolders-container');
+      const rootBtn = document.getElementById('folder-btn-root');
+      
+      if (currentFolderId === 'root') {
+        rootBtn.className = "w-full flex items-center gap-2.5 px-3 py-2 text-sm font-semibold rounded-xl bg-brand-50 text-brand-700";
+      } else {
+        rootBtn.className = "w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium rounded-xl hover:bg-slate-100 text-slate-600";
+      }
 
-    window.openAuthModal = () => document.getElementById('auth-modal').classList.remove('hidden');
-    window.closeAuthModal = () => document.getElementById('auth-modal').classList.add('hidden');
-    window.openUploadModal = () => document.getElementById('upload-modal').classList.remove('hidden');
-    window.closeUploadModal = () => document.getElementById('upload-modal').classList.add('hidden');
-    window.openNewFolderModal = () => document.getElementById('folder-modal').classList.remove('hidden');
-    window.closeFolderModal = () => document.getElementById('folder-modal').classList.add('hidden');
+      subfoldersContainer.innerHTML = folders.map(f => `
+        <button onclick="navigateToFolder('${f.id}')" class="w-full flex items-center justify-between px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${f.id === currentFolderId ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-slate-600 hover:bg-slate-100'}">
+          <span class="flex items-center gap-2 truncate">
+            <i class="fa-solid ${f.id === currentFolderId ? 'fa-folder-open text-brand-600' : 'fa-folder text-slate-400'}"></i>
+            <span class="truncate">${f.name}</span>
+          </span>
+        </button>
+      `).join('');
+
+      // 2. Render Breadcrumbs
+      const breadcrumbs = document.getElementById('breadcrumbs');
+      let path = [{ id: 'root', name: 'Inicio' }];
+      if (currentFolderId !== 'root') {
+        const currentFolder = folders.find(f => f.id === currentFolderId);
+        if (currentFolder) path.push(currentFolder);
+      }
+      breadcrumbs.innerHTML = path.map((p, idx) => `
+        ${idx > 0 ? '<i class="fa-solid fa-chevron-right text-[10px] text-slate-300"></i>' : ''}
+        <button onclick="navigateToFolder('${p.id}')" class="hover:text-brand-600 flex items-center gap-1.5 ${idx === path.length - 1 ? 'font-bold text-slate-800' : ''}">
+          <span>${p.name}</span>
+        </button>
+      `).join('');
+
+      // 3. Filter Items for Table
+      let currentFolders = folders.filter(f => f.parentId === currentFolderId);
+      let currentFiles = files.filter(f => f.folderId === currentFolderId);
+
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        currentFolders = folders.filter(f => f.name.toLowerCase().includes(q));
+        currentFiles = files.filter(f => f.name.toLowerCase().includes(q));
+      }
+
+      // 4. Render Items Table
+      const tbody = document.getElementById('files-table-body');
+      const emptyState = document.getElementById('empty-state');
+      tbody.innerHTML = '';
+
+      if (currentFolders.length === 0 && currentFiles.length === 0) {
+        emptyState.classList.remove('hidden');
+      } else {
+        emptyState.classList.add('hidden');
+
+        // Render Folders First
+        currentFolders.forEach(f => {
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-50/80 transition-colors group";
+          tr.innerHTML = `
+            <td class="py-3 px-4 sm:px-6">
+              <button onclick="navigateToFolder('${f.id}')" class="flex items-center gap-3 font-semibold text-slate-700 hover:text-brand-600">
+                <i class="fa-solid fa-folder text-brand-500 text-lg"></i>
+                <span>${f.name}</span>
+              </button>
+            </td>
+            <td class="py-3 px-4 hidden md:table-cell text-xs text-slate-400">Carpeta</td>
+            <td class="py-3 px-4 hidden sm:table-cell text-xs text-slate-400">-</td>
+            <td class="py-3 px-4 hidden sm:table-cell text-xs text-slate-400">-</td>
+            <td class="py-3 px-4 sm:px-6 text-right">
+              ${user ? `
+                <button onclick="deleteItem('folder', '${f.id}')" class="text-slate-400 hover:text-red-600 text-xs p-1" title="Eliminar">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              ` : ''}
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        // Render Files Next
+        currentFiles.forEach(file => {
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-50/80 transition-colors group";
+          const formattedSize = file.size ? (file.size / 1024).toFixed(1) + ' KB' : 'N/A';
+          const formattedDate = file.date ? new Date(file.date).toLocaleDateString() : 'N/A';
+
+          tr.innerHTML = `
+            <td class="py-3 px-4 sm:px-6">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-file-pdf text-red-500 text-lg"></i>
+                <span class="font-medium text-slate-800">${file.name}</span>
+              </div>
+            </td>
+            <td class="py-3 px-4 hidden md:table-cell text-xs text-slate-500">${file.uploader || 'Docente'}</td>
+            <td class="py-3 px-4 hidden sm:table-cell text-xs text-slate-400">${formattedDate}</td>
+            <td class="py-3 px-4 hidden sm:table-cell text-xs text-slate-400">${formattedSize}</td>
+            <td class="py-3 px-4 sm:px-6 text-right space-x-2">
+              <a href="${file.url}" download="${file.name}" class="inline-flex items-center gap-1 px-2.5 py-1 bg-brand-50 hover:bg-brand-100 text-brand-700 text-xs font-semibold rounded-lg transition-colors">
+                <i class="fa-solid fa-download"></i>
+                <span class="hidden sm:inline">Descargar</span>
+              </a>
+              ${user ? `
+                <button onclick="deleteItem('file', '${file.id}')" class="text-slate-400 hover:text-red-600 text-xs p-1" title="Eliminar">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              ` : ''}
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+    };
+  </script>
+
+  <!-- INTERACTION UI HELPER FUNCTIONS -->
+  <script>
+    function navigateToFolder(folderId) {
+      window.appState.currentFolderId = folderId;
+      window.renderApp();
+    }
+
+    function handleSearch() {
+      window.appState.searchQuery = document.getElementById('search-input').value;
+      window.renderApp();
+    }
+
+    // Modal Control Functions
+    function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
+    function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
+    
+    function openFolderModal() { document.getElementById('folder-modal').classList.remove('hidden'); }
+    function closeFolderModal() { document.getElementById('folder-modal').classList.add('hidden'); }
+    
+    function openUploadModal() { document.getElementById('upload-modal').classList.remove('hidden'); }
+    function closeUploadModal() { document.getElementById('upload-modal').classList.add('hidden'); }
+
+    // Drag and Drop Event Handlers
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const zone = document.getElementById('drop-zone');
+      zone.classList.add('border-brand-500', 'bg-brand-50');
+    }
+
+    function handleDragLeave(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const zone = document.getElementById('drop-zone');
+      zone.classList.remove('border-brand-500', 'bg-brand-50');
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const zone = document.getElementById('drop-zone');
+      zone.classList.remove('border-brand-500', 'bg-brand-50');
+
+      if (e.dataTransfer && e.dataTransfer.files.length > 0) {
+        window.processFiles(e.dataTransfer.files);
+      }
+    }
+
+    function handleFileSelect(e) {
+      if (e.target.files && e.target.files.length > 0) {
+        window.processFiles(e.target.files);
+      }
+    }
   </script>
 </body>
 </html>
