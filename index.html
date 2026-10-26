@@ -70,7 +70,7 @@
       
       <!-- Botones de Acción de Docente -->
       <div id="teacher-actions" class="hidden space-y-2">
-        <button onclick="openNewFolderModal()" class="w-full flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow-sm transition-all">
+        <button onclick="openFolderModal()" class="w-full flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow-sm transition-all">
           <i class="fa-solid fa-folder-plus"></i>
           <span>Nueva Carpeta</span>
         </button>
@@ -84,7 +84,7 @@
       <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
         <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-2 flex justify-between items-center">
           <span>Carpetas</span>
-          <i class="fa-solid fa-arrows-rotate text-slate-400 hover:text-slate-600 cursor-pointer" onclick="loadContent()" title="Actualizar"></i>
+          <i class="fa-solid fa-arrows-rotate text-slate-400 hover:text-slate-600 cursor-pointer" onclick="renderFolders()" title="Actualizar"></i>
         </h2>
         <nav id="folder-list" class="space-y-1">
           <!-- Carga dinámicamente -->
@@ -198,13 +198,12 @@
     </div>
   </div>
 
-  <!-- MODAL: SUBIR ARCHIVOS (NUEVA ZONA DE ARRASTRE Y SOLTADO) -->
+  <!-- MODAL: SUBIR ARCHIVOS -->
   <div id="upload-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-100 relative">
       <button onclick="closeUploadModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up text-brand-600"></i> Subir Archivos</h2>
       
-      <!-- Zona Drop Target con eventos dragover, dragleave y drop -->
       <div id="drop-zone" 
            ondragover="handleDragOver(event)" 
            ondragleave="handleDragLeave(event)" 
@@ -231,7 +230,6 @@
     import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // NUEVA CONFIGURACIÓN DE FIREBASE CON LA CLAVE ACTUALIZADA
     const firebaseConfig = {
       apiKey: "AIzaSyAn1ziwrWlSp9YZuaif78FdzJeYGY4Prc0",
       authDomain: "tecnologia-sin-miedos.firebaseapp.com",
@@ -246,7 +244,6 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // ESTADO DE LA APLICACIÓN
     window.appState = {
       user: null,
       currentFolderId: 'root',
@@ -254,7 +251,6 @@
       files: []
     };
 
-    // ESCUCHAR ESTADO DE AUTENTICACIÓN
     onAuthStateChanged(auth, (user) => {
       window.appState.user = user;
       const teacherActions = document.getElementById('teacher-actions');
@@ -276,24 +272,22 @@
         userStatusText.textContent = 'Modo Estudiante';
         userBadge.classList.remove('hidden');
       }
-      renderFiles();
+      window.renderFiles();
     });
 
-    // SUSCRIPCIÓN EN TIEMPO REAL A FIRESTORE
     const foldersRef = collection(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'folders');
     const filesRef = collection(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'files');
 
     onSnapshot(foldersRef, (snapshot) => {
       window.appState.folders = snapshot.docs.map(doc => doc.data());
-      renderFolders();
+      window.renderFolders();
     });
 
     onSnapshot(filesRef, (snapshot) => {
       window.appState.files = snapshot.docs.map(doc => doc.data());
-      renderFiles();
+      window.renderFiles();
     });
 
-    // MANEJO DE LOGIN
     window.handleLogin = async function(e) {
       e.preventDefault();
       const email = document.getElementById('login-email').value;
@@ -303,7 +297,7 @@
       try {
         errorDiv.classList.add('hidden');
         await signInWithEmailAndPassword(auth, email, password);
-        closeLoginModal();
+        window.closeLoginModal();
       } catch (err) {
         errorDiv.textContent = `Error de autenticación: ${err.message}`;
         errorDiv.classList.remove('hidden');
@@ -314,7 +308,6 @@
       signOut(auth);
     };
 
-    // MANEJO DE CARPETAS
     window.handleCreateFolder = async function(e) {
       e.preventDefault();
       const name = document.getElementById('folder-name-input').value.trim();
@@ -328,21 +321,20 @@
       };
 
       await setDoc(doc(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'folders', folderId), newFolder);
-      closeFolderModal();
+      window.closeFolderModal();
       document.getElementById('folder-name-input').value = '';
     };
 
     window.selectFolder = function(folderId) {
       window.appState.currentFolderId = folderId;
-      renderFolders();
-      renderFiles();
+      window.renderFolders();
+      window.renderFiles();
     };
 
-    // RENDERIZADO
-function renderFolders() {
+    window.renderFolders = function() {
       const nav = document.getElementById('folder-list');
-      
-      // Botón principal fijo para la carpeta raíz
+      if (!nav) return;
+
       let html = `
         <button onclick="selectFolder('root')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium transition-all ${window.appState.currentFolderId === 'root' ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}">
           <span class="flex items-center gap-2.5">
@@ -351,7 +343,6 @@ function renderFolders() {
         </button>
       `;
 
-      // Se filtran las carpetas creadas por el usuario excluyendo cualquiera que se llame 'root' o 'Inicio'
       const userFolders = window.appState.folders.filter(f => f.id !== 'root' && f.name.toLowerCase() !== 'inicio');
 
       userFolders.forEach(f => {
@@ -369,14 +360,15 @@ function renderFolders() {
 
       nav.innerHTML = html;
 
-      // Actualizar título de la carpeta activa
       const currentFolder = window.appState.folders.find(f => f.id === window.appState.currentFolderId);
       document.getElementById('current-folder-title').textContent = (window.appState.currentFolderId === 'root') ? 'Inicio' : (currentFolder ? currentFolder.name : 'Inicio');
-    }
+    };
 
-    function renderFiles() {
+    window.renderFiles = function() {
       const tbody = document.getElementById('files-table-body');
       const emptyState = document.getElementById('empty-state');
+      if (!tbody || !emptyState) return;
+
       const searchVal = (document.getElementById('search-input')?.value || '').toLowerCase();
 
       const currentFiles = window.appState.files.filter(f => 
@@ -417,10 +409,10 @@ function renderFolders() {
       });
 
       tbody.innerHTML = html;
-    }
+    };
 
     window.filterFiles = function() {
-      renderFiles();
+      window.renderFiles();
     };
 
     window.deleteFolder = async function(folderId) {
@@ -438,26 +430,25 @@ function renderFolders() {
       }
     };
 
-    // LOGICA DE CARGA Y ZONA DE ARRASTRE/SOLTADO (DRAG & DROP)
     window.handleDragOver = function(e) {
       e.preventDefault();
       e.stopPropagation();
       const zone = document.getElementById('drop-zone');
-      zone.classList.add('border-brand-500', 'bg-brand-50');
+      if (zone) zone.classList.add('border-brand-500', 'bg-brand-50');
     };
 
     window.handleDragLeave = function(e) {
       e.preventDefault();
       e.stopPropagation();
       const zone = document.getElementById('drop-zone');
-      zone.classList.remove('border-brand-500', 'bg-brand-50');
+      if (zone) zone.classList.remove('border-brand-500', 'bg-brand-50');
     };
 
     window.handleDrop = function(e) {
       e.preventDefault();
       e.stopPropagation();
       const zone = document.getElementById('drop-zone');
-      zone.classList.remove('border-brand-500', 'bg-brand-50');
+      if (zone) zone.classList.remove('border-brand-500', 'bg-brand-50');
 
       if (e.dataTransfer && e.dataTransfer.files.length > 0) {
         processFiles(e.dataTransfer.files);
@@ -492,13 +483,12 @@ function renderFolders() {
           
           await setDoc(doc(db, 'artifacts', 'tecnologia-sin-miedos', 'public', 'data', 'files', fileObj.id), fileObj);
           if (status) status.classList.add('hidden');
-          closeUploadModal();
+          window.closeUploadModal();
         };
         reader.readAsDataURL(file);
       });
     }
 
-    // CONTROL DE MODALES
     window.openLoginModal = () => document.getElementById('login-modal').classList.remove('hidden');
     window.closeLoginModal = () => document.getElementById('login-modal').classList.add('hidden');
 
